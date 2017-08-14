@@ -1,0 +1,4 @@
+{
+  "plugins": ["transform-es2015-classes"],
+  "presets": ["es2015", "stage-2"]
+}
