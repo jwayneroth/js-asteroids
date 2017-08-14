@@ -1,4 +1,4 @@
-export class SpaceObject {
+class SpaceObject {
 	/*private var vx:Number;
 	private var vy:Number;
 	private var vr:Number;
@@ -10,16 +10,10 @@ export class SpaceObject {
 	private var target:MovieClip;
 	public var objectType:String = "object";*/
 
-	constructor(clip = null, //:String, 
-	            clipName = '', //:String, 
-	            _targetClip = null, //:MovieClip, 
-	            _right = 0, //:Number, 
-	            _bottom = 0, //:Number,
-	            xPos = 0, //:Number,
-	            yPos = 0, //:Number
-	) {
-	
-		target = _targetClip;
+	constructor(clip, _right, _bottom, xPos, yPos) {
+		//console.log('SpaceObject::constructor\n\tright: ' + _right + ' bottom: ' + _bottom + ' x: ' + xPos + ' y: ' + yPos)
+		
+		/*target = _targetClip;
 		object = target.attachMovie(clip, clipName, target.getNextHighestDepth());
 		object._x = xPos;
 		object._y = yPos;
@@ -27,87 +21,98 @@ export class SpaceObject {
 		bottom = _bottom;
 		top = 0;
 		left = 0;
-		setVels();
+		setVels();*/
+		
+		clip.x = xPos
+		clip.y = yPos
+		
+		this.clip = clip
+		this.right = _right
+		this.bottom = _bottom
+		this.top = 0
+		this.left = 0
+		this.setVels()
+		this.setBounds()
+	}
+	
+	setBounds() {
+		//console.log('SpaceObject::setBounds')
+		this.bounds = this.clip.nominalBounds
+		//this.clip.setBounds(this.bounds)
+	}
+	
+	setVels(_vx, _vy, _vr) {
+		this.vx = _vx;
+		this.vy = _vy;
+		if (arguments.length === 3) this.vr = _vr;
 	}
 	
 	run() {
-		this.checkWalls(object);
+		this.checkWalls(object)
 	}
 	
-	checkWalls(clip) {
-		if (clip._x > right + clip._width / 2) {
-			clip._x = 0 - clip._width / 2;
+	checkWalls() {
+		
+		const clip = this.clip
+		
+		if (clip.x > this.right + this.bounds.width / 2) {
+			clip.x = 0 - this.bounds.width / 2
 		}
-		if (clip._x < 0 - clip._width / 2) {
-			clip._x = right + clip._width / 2;
+		if (clip.x < 0 - this.bounds.width / 2) {
+			clip.x = this.right + this.bounds.width / 2
 		}
-		if (clip._y > bottom + clip._height / 2) {
-			clip._y = 0 - clip._height / 2;
+		if (clip.y > this.bottom + this.bounds.height / 2) {
+			clip.y = 0 - this.bounds.height / 2
 		}
-		if (clip._y < 0 - clip._height / 2) {
-			clip._y = bottom + clip._height / 2;
+		if (clip.y < 0 - this.bounds.height / 2) {
+			clip.y = this.bottom + this.bounds.height / 2
 		}
 	}
 	
-	/*public function setX(xPos:Number) {
-		object._x = xPos;
+	setWalls(right, bottom) {
+		this.right = right
+		this.bottom = bottom
 	}
-	public function setY(yPos:Number) {
-		object._y = yPos;
+	
+	setX(xPos) {
+		this.clip.x = xPos
 	}
-	public function setScales(_scale:Number){
-		object._xscale = object._yscale = _scale;
+	
+	setY(yPos) {
+		this.clip.y = yPos
 	}
-	public function getX():Number {
-		return object._x;
+	
+	getRotation() {
+		return this.clip.rotation
 	}
-	public function getY():Number {
-		return object._y;
+	
+	setRotation(rot) {
+		this.clip.rotation = rot
 	}
-	public function getWidth():Number {
-		return object._width;
+	
+	setScales(_scale) {
+		this.clip.scaleX = this.clip.scaleY = _scale
 	}
-	public function getHeight():Number{
-		return object._height;
+	
+	getX() {
+		return this.clip.x
 	}
-	public function setRotation(rot:Number):Void {
-		object._rotation = rot;
+	
+	getY() {
+		return this.clip.y
 	}
-	public function getRotation():Number {
-		return object._rotation;
+	
+	getWidth() {
+		return this.bounds.width
 	}
-	public function setVels(_vx:Number, _vy:Number, _vr:Number) {
-		if (arguments.length > 0) {
-			vx = _vx;
-			vy = _vy;
-			if (arguments.length == 3) {
-				vr = _vr;
-			}
-		} else {
-			vx = 0;
-			vy = 0;
-			vr = 0;
-		}
+	
+	getHeight() {
+		return this.bounds.height
 	}
-	public function kill() {
-
-		delete object.onEnterFrame;
-		//object._visible = false;
-		object.removeMovieClip(this);
-		//removeMovieClip(this.object);
+	
+	kill() {
+		//console.log('SpaceObject::kill ' + this.clip.name + ' ' + this.clip.stage.numChildren)
+		this.clip.removeAllEventListeners()
+		this.clip.stage.removeChild(this.clip)
 	}
-	private function setWalls(walls:MovieClip) {
-		if (walls == _root) {
-			trace("targetMC is set to ROOT!!!");
-			right = Stage.width;
-			bottom = Stage.height;
-		} else {
-			right = walls._width;
-			bottom = walls._height;
-			//right = 800;
-			//bottom = 400;
-		}
-		left = 0;
-		top = 0;
-	}*/
 }

@@ -1,99 +1,107 @@
-import {SpaceObject} from './space-object'
+// Ship
 
-let thrust //:Number;
-let friction //:Number;
-let active = false //:Boolean = false;
-let makeAliveID //:Number;
+const ROTATION_VEL = 10
 
 class Ship extends SpaceObject {
 
-	constructor(clip = null, //:String,
-	            clipName = null, //:String,
-	            target = null, //:MovieClip,
-	            _right = 0, //:Number,
-	            _bottom = 9, //:Number,
-	            xPos = 0, //:Number,
-	            yPos = 0, //:Number,
-	            thrustIn = 0, //:Number,
-	            frictionIn = 0, //:Number
-	) {
-		super(clip ,clipName, target, _right, _bottom, xPos, yPos)
-		/*object._alpha = 0;
-		thrust = thrustIn;
-		friction = frictionIn;
-		registerShip();
-		setVels(0,0,10);*/
+	constructor(clip, _right, _bottom, xPos, yPos, thrustIn, frictionIn) {
+		super(clip, _right, _bottom, xPos, yPos)
+		
+		console.log('Ship::constructor')
+		
+		this.tickDelegate = null
+		this.keyDelegate = null
+		
+		this.makeAliveID = null
+		this.thrust = thrustIn
+		this.friction = frictionIn
+		
+		this.setVels(0,0) //,12)
+		this.vr = ROTATION_VEL      
 	}
 	
-	/*private function shipRun() {
-		var ship:Ship = this;
-		object.onEnterFrame = function() {
-			if (Key.isDown(Key.LEFT)) {
-				this._rotation -= ship.vr;
-			} else if (Key.isDown(Key.RIGHT)) {
-				this._rotation += ship.vr;
-			}
-			if (Key.isDown(Key.UP)) {
-				var radians:Number = this._rotation * Math.PI / 180;
-				var ax:Number = Math.cos(radians) * ship.thrust;
-				var ay:Number = Math.sin(radians) * ship.thrust;
-				ship.vx += ax;
-				ship.vy += ay;
-				if(this._currentFrame == 1){
-					this.gotoAndPlay("run");
-				}
-			}else if(ship.active){
-				this.gotoAndStop("active");
-			}
-			ship.vx *= ship.friction;
-			ship.vy *= ship.friction;
-			this._x += ship.vx;
-			this._y += ship.vy;
-			ship.checkWalls(this);
-		};
+	setBounds() {
+		//console.log('Ship::setBounds')
+		this.bounds = this.clip.ship_inner.nominalBounds
 	}
-	public function getActive():Boolean{
+	
+	makeActive() {
+		//console.log('Ship::makeActive')
+		
+		this.active = true
+		
+		clearInterval(this.makeAliveID)
+		this.makeAliveID = setInterval(this.makeAlive.bind(this), 1000)
+		
+		this.clip.gotoAndPlay('blinking')
+		
+		this.tickDelegate = this.shipRun.bind(this)
+		this.clip.addEventListener('tick', this.tickDelegate)
+	}
+	
+	makeInactive() {
+		//console.log('Ship::makeInactive')
+		
+		this.active = false
+		
+		this.clip.removeAllEventListeners()
+		
+		this.clip.gotoAndStop('off');
+	}
+	
+	makeAlive() {
+		//console.log('Ship::makeAlive')
+		
+		this.alive = true
+		this.clip.gotoAndStop("active")
+		clearInterval(this.makeAliveID)
+		$(window).trigger('shipLifeChange', [true])
+	}
+	
+	shipRun() {
+		//console.log('shipRun')
+		
+		// left
+		if (Key.isDown(37)) {
+			this.clip.rotation -= this.vr
+		// right
+		} else if (Key.isDown(39)) {
+			this.clip.rotation += this.vr
+		}
+		// up
+		if (Key.isDown(38)) {
+			const radians = this.clip.rotation * Math.PI / 180;
+			const ax = Math.cos(radians) * this.thrust;
+			const ay = Math.sin(radians) * this.thrust;
+			this.vx += ax;
+			this.vy += ay;
+			if(this.clip.currentLabel == "active") {
+				this.clip.gotoAndPlay("run");
+			}
+		}
+		
+		this.vx *= this.friction;
+		this.vy *= this.friction;
+		
+		this.clip.x += this.vx;
+		this.clip.y += this.vy;
+
+		this.checkWalls();
+	}
+	
+	getActive() {
 		return this.active;
 	}
-	public function makeActive(){
-		this.object._alpha = 100;
-		//this.active = true;
-		//this.object.gotoAndStop("active");
-		this.object.gotoAndPlay('blinking');
-		shipRun();
-		clearInterval(makeAliveID);
-		makeAliveID = setInterval(this,"makeAlive",3000);
-		//trace("SHIP NOW ACTIVE!!");
-	}
-	private function makeAlive()
-	{
-		this.object.gotoAndStop("active");
-		clearInterval(makeAliveID);
-		this.active = true;
+	
+	getPointX() {
+		const rad = this.clip.rotation * Math.PI/180
+		const pointX = this.clip.x + Math.cos(rad) // * 20
+		return pointX
 	}
 	
-	public function getPointX():Number{
-		var rad:Number = object._rotation * Math.PI/180;
-		var pointX:Number = object._x + Math.cos(rad) * 20;
-		return pointX;
+	getPointY() {
+		const rad = this.clip.rotation * Math.PI/180
+		const pointY = this.clip.y + Math.sin(rad) // * 20
+		return pointY
 	}
-	public function getPointY():Number{
-		var rad:Number = object._rotation * Math.PI/180;
-		var pointY:Number = object._y + Math.sin(rad) * 20;
-		return pointY;
-	}
-	public function makeInactive(){
-		this.active = false;
-		this.object.gotoAndPlay(1);
-		//trace("SHIP NOW INACTIVE!!");
-	}
-	public function kill() {
-		delete object.onEnterFrame;
-		//object._visible = false;
-		removeMovieClip(object);
-		//removeMovieClip(this.object);
-	}
-	private function registerShip() {
-		Key.addListener(this);
-	}*/
 }
