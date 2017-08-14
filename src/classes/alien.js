@@ -39,7 +39,9 @@ class AlienLaser extends SpaceObject {
 /**
  * Alien
  */
-class Alien extends SpaceObject {
+import SpaceObject from './space-object.js'
+
+export default class Alien extends SpaceObject {
 	constructor(clip, ship, _right, _bottom, _xPos, _yPos) {
 		super(clip, _right, _bottom, _xPos, _yPos);
 		

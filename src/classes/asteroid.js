@@ -1,6 +1,6 @@
-// Asteroid
+import SpaceObject from './space-object.js'
 
-class Asteroid extends SpaceObject {
+export default class Asteroid extends SpaceObject {
 	constructor(clip, _right, _bottom) {
 		super(clip, _right, _bottom, 0, 0);
 		

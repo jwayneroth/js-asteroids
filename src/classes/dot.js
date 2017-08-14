@@ -1,6 +1,6 @@
-// Dot
+import SpaceObject from './space-object.js'
 
-class Dot extends SpaceObject {
+export default class Dot extends SpaceObject {
 	constructor(clip, _right, _bottom, xPos, yPos) {
 		super(clip, _right, _bottom, xPos,yPos)
 		this.initDot()

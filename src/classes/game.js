@@ -1,13 +1,23 @@
+import Alien from './alien.js'
+import Asteroid from './asteroid.js'
+import Debris from './debris.js'
+import Dot from './dot.js'
+import KeyListener from './key.js'
+import Laser from './Laser.js'
+import Ship from './ship.js'
+import Splinter from './splinter.js'
+
 const ASTEROID_COUNT = 8;
 const NUM_LASERS = 20;
 const NUM_LIVES = 1;
 const FIRE_DELAY = 175;
+const Key = new KeyListener();
 
 /*
  * AsteroidsGame
  * arg stage: cjs Stage Object
  */
-class AsteroidsGame {
+export default class AsteroidsGame {
 	constructor(stage) { 
 		//console.log('AsteroidsGame::constructor');
 		
@@ -501,30 +511,6 @@ class AsteroidsGame {
 		this.stage.update();
 	}
 }
-
-/**
- * Key
- * maintains object with depressed key codes
- */
-class Key {
-	constructor() {
-		this.keys = {};
-		$(window).on('keydown', this.keydownHandler.bind(this));
-		$(window).on('keyup', this.keyupHandler.bind(this));
-	}
-	
-	isDown(keycode) {
-		return this.keys[keycode];
-	}
-	
-	keydownHandler(evt) {
-		this.keys[evt.which] = true;
-	}
-	
-	keyupHandler(evt) {
-		this.keys[evt.which] = false;
-	}
-} Key = new Key();
 
 /**
  * GameTimer

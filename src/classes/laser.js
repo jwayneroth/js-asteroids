@@ -1,6 +1,6 @@
-// Laser
+import SpaceObject from './space-object.js'
 
-class Laser extends SpaceObject {
+export default class Laser extends SpaceObject {
 	
 	constructor(clip, _right, _bottom, shipX, shipY, rotIn) {
 		super(clip, _right, _bottom, shipX, shipY);

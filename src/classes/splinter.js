@@ -1,6 +1,6 @@
-// Splinter
+import SpaceObject from './space-object.js'
 
-class Splinter extends SpaceObject {
+export default class Splinter extends SpaceObject {
 	constructor(clip, _right, _bottom, xPos, yPos) {
 		super(clip, _right, _bottom, xPos, yPos)
 		this.initDebris()

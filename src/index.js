@@ -1,8 +1,13 @@
-let canvas, stage, anim_container, dom_overlay_container;
+import createjs from "createjs";
+import AsteroidsGame from './classes/game.js'
+import KeyListener from './classes/key.js'
+
+var canvas, stage, anim_container, dom_overlay_container, Key;
 
 function init() {
 	console.log('init')
 	canvas = document.getElementById("canvas");
+	console.log('canvas', canvas);
 	stage = new createjs.Stage(canvas);
 	anim_container = document.getElementById("animation_container");
 	dom_overlay_container = document.getElementById("dom_overlay_container");
@@ -10,7 +15,6 @@ function init() {
 	let game, lastW = -1, lastH = -1;
 	
 	function resizeCanvas() {
-		
 		const w = lib.properties.width,
 					h = lib.properties.height;
 		const iw = window.innerWidth,
@@ -38,6 +42,8 @@ function init() {
 
 	resizeCanvas();
 	
+	Key = new KeyListener();
+	
 	game = new AsteroidsGame(stage);
 	
 	window.addEventListener('resize', function() {
@@ -45,3 +51,5 @@ function init() {
 		game.updateSize()
 	});
 }
+
+window.addEventListener('load', init)

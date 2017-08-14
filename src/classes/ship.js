@@ -1,8 +1,10 @@
-// Ship
+import SpaceObject from './space-object.js'
+import KeyListener from './key.js'
 
+const Key = new KeyListener()
 const ROTATION_VEL = 10
 
-class Ship extends SpaceObject {
+export default class Ship extends SpaceObject {
 
 	constructor(clip, _right, _bottom, xPos, yPos, thrustIn, frictionIn) {
 		super(clip, _right, _bottom, xPos, yPos)

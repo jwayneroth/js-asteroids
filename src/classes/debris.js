@@ -1,8 +1,6 @@
-/**
- * Debris
- */
+import SpaceObject from './space-object.js'
 
-class Debris extends SpaceObject {
+export default class Debris extends SpaceObject {
 	constructor(clip, _right, _bottom, xPos, yPos) {
 		super(clip, _right, _bottom, xPos, yPos);
 		this.initDebris();

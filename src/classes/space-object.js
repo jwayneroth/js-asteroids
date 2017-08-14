@@ -1,4 +1,4 @@
-class SpaceObject {
+export default class SpaceObject {
 	/*private var vx:Number;
 	private var vy:Number;
 	private var vr:Number;
