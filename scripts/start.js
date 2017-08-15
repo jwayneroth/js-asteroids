@@ -36,10 +36,12 @@ var compiler;
 var handleCompile;
 
 function setupCompiler(host, port, protocol) {
+  //console.log('setupCompiler', port, protocol);
+  
   // "Compiler" is a low-level interface to Webpack.
   // It lets us listen to some events and provide our own custom messages.
   compiler = webpack(config, handleCompile);
-
+    
   // "invalid" event fires when you have changed a file, and Webpack is
   // recompiling a bundle. WebpackDevServer takes care to pause serving the
   // bundle, so if you refresh, it'll wait instead of serving the old one.

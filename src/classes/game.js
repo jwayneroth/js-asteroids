@@ -1,3 +1,5 @@
+import $ from 'jquery'
+
 import Alien from './alien.js'
 import Asteroid from './asteroid.js'
 import Debris from './debris.js'
@@ -11,7 +13,6 @@ const ASTEROID_COUNT = 8;
 const NUM_LASERS = 20;
 const NUM_LIVES = 1;
 const FIRE_DELAY = 175;
-const Key = new KeyListener();
 
 /*
  * AsteroidsGame
@@ -27,6 +28,8 @@ export default class AsteroidsGame {
 		this.right = this.canvas.width;
 		this.bottom = this.canvas.height;
 		this.fps = lib.properties.fps;
+		
+		this.key = new KeyListener();
 		
 		// flags
 		this.firing = false;
@@ -171,7 +174,7 @@ export default class AsteroidsGame {
 		ship_clip.name = 'ship';
 		ship_clip.gotoAndStop('off');
 		
-		this.ship = new Ship(ship_clip, this.right, this.bottom, this.right/2, this.bottom/2, .3, .999);
+		this.ship = new Ship(ship_clip, this.right, this.bottom, this.right/2, this.bottom/2, .3, .999, this.key);
 		
 		this.stage.addChild(ship_clip);
 		
@@ -456,7 +459,7 @@ export default class AsteroidsGame {
 		if (this.shipAlive) {
 			
 			// is ship firing (spacebar Depressed)
-			if (Key.isDown(32) === true) {
+			if (this.key.isDown(32) === true) {
 				if (!this.firing) {
 					
 					if(this.laserNo >= this.laserArray.length) this.makeLasers();

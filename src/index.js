@@ -1,13 +1,12 @@
 import createjs from "createjs";
 import AsteroidsGame from './classes/game.js'
-import KeyListener from './classes/key.js'
+import './scss/styles.scss'
 
-var canvas, stage, anim_container, dom_overlay_container, Key;
+let canvas, stage, anim_container, dom_overlay_container;
 
 function init() {
 	console.log('init')
 	canvas = document.getElementById("canvas");
-	console.log('canvas', canvas);
 	stage = new createjs.Stage(canvas);
 	anim_container = document.getElementById("animation_container");
 	dom_overlay_container = document.getElementById("dom_overlay_container");
@@ -41,8 +40,6 @@ function init() {
 	}
 
 	resizeCanvas();
-	
-	Key = new KeyListener();
 	
 	game = new AsteroidsGame(stage);
 	

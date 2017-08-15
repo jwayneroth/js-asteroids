@@ -1,12 +1,13 @@
+import $ from 'jquery'
+
 import SpaceObject from './space-object.js'
 import KeyListener from './key.js'
 
-const Key = new KeyListener()
 const ROTATION_VEL = 10
 
 export default class Ship extends SpaceObject {
 
-	constructor(clip, _right, _bottom, xPos, yPos, thrustIn, frictionIn) {
+	constructor(clip, _right, _bottom, xPos, yPos, thrustIn, frictionIn, keyListener = new KeyListener()) {
 		super(clip, _right, _bottom, xPos, yPos)
 		
 		console.log('Ship::constructor')
@@ -19,7 +20,9 @@ export default class Ship extends SpaceObject {
 		this.friction = frictionIn
 		
 		this.setVels(0,0) //,12)
-		this.vr = ROTATION_VEL      
+		this.vr = ROTATION_VEL    
+		
+		this.key = keyListener;  
 	}
 	
 	setBounds() {
@@ -64,20 +67,20 @@ export default class Ship extends SpaceObject {
 		//console.log('shipRun')
 		
 		// left
-		if (Key.isDown(37)) {
+		if (this.key.isDown(37)) {
 			this.clip.rotation -= this.vr
 		// right
-		} else if (Key.isDown(39)) {
+		} else if (this.key.isDown(39)) {
 			this.clip.rotation += this.vr
 		}
 		// up
-		if (Key.isDown(38)) {
+		if (this.key.isDown(38)) {
 			const radians = this.clip.rotation * Math.PI / 180;
 			const ax = Math.cos(radians) * this.thrust;
 			const ay = Math.sin(radians) * this.thrust;
 			this.vx += ax;
 			this.vy += ay;
-			if(this.clip.currentLabel == "active") {
+			if(this.clip.currentLabel === "active") {
 				this.clip.gotoAndPlay("run");
 			}
 		}

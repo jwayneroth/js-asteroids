@@ -68,6 +68,8 @@ recursive(paths.appBuild, (err, fileNames) => {
   // if you're in it, you don't end up in Trash
   fs.emptyDirSync(paths.appBuild);
 
+  console.log('start build...');
+
   // Start the webpack build
   build(previousSizeMap);
 
@@ -122,19 +124,20 @@ function printErrors(summary, errors) {
 // Create the production build and print the deployment instructions.
 function build(previousSizeMap) {
   console.log('Creating an optimized production build...');
+  
   webpack(config).run((err, stats) => {
     if (err) {
-      printErrors('Failed to compile.', [err]);
+      printErrors('Failed to compile. err', [err]);
       process.exit(1);
     }
 
     if (stats.compilation.errors.length) {
-      printErrors('Failed to compile.', stats.compilation.errors);
+      printErrors('Failed to compile. compilation errors', stats.compilation.errors);
       process.exit(1);
     }
 
     if (process.env.CI && stats.compilation.warnings.length) {
-     printErrors('Failed to compile.', stats.compilation.warnings);
+     printErrors('Failed to compile. compilation warnings', stats.compilation.warnings);
      process.exit(1);
    }
 
