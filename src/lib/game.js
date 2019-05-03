@@ -19,18 +19,15 @@ const FIRE_DELAY = 175;
  * arg stage: cjs Stage Object
  */
 export default class AsteroidsGame {
-	constructor(stage, options = {
-		right: window.innerWidth,
-		bottom: window.innerHeight
-	}) { 
+	constructor(stage, right, bottom, onKillCallback) { 
 		//console.log('AsteroidsGame::constructor');
 		
 		this.stage = stage;
-		this.options = options;
 		this.stage.name = 'AsteroidsStage';
 		this.canvas = stage.canvas;
-		this.right = this.canvas.width;
-		this.bottom = this.canvas.height;
+		this.right = right
+		this.bottom = bottom;
+		this.onKillCallback = onKillCallback;
 		this.fps = lib.properties.fps;
 		
 		this.key = new KeyListener();
@@ -82,11 +79,11 @@ export default class AsteroidsGame {
 	 * updateSize
 	 * reset right and bottom props on stage and all spaceObjects
 	 */
-	updateSize() {
+	updateSize(w, h) {
 		//console.log('AsteroidsGame::updateSize w: ' + w + ' h: ' + h);
 		
-		const w = this.canvas.width,
-		      h = this.canvas.height;
+		//const w = this.canvas.width,
+		//      h = this.canvas.height;
 		
 		let i = 0;
 		
@@ -272,9 +269,7 @@ export default class AsteroidsGame {
 				
 				this.removeEnemyByName(enemy.clip.name); //this.enemiesArray.splice(i,1);
 				
-				if (this.options.killCallback) {
-					this.options.killCallback(enemy.getX(), enemy.getY());
-				}
+				this.onKillCallback(enemy.getX(), enemy.getY());
 				
 				break;
 			}

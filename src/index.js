@@ -360,17 +360,19 @@ function initGame() {
 	}
 
 	resizeCanvas();
-
-	game = new AsteroidsGame(stage, {
-		killCallback: function(dx, dy) {
-			checkIntersectionMod(dx, dy);
-			//clearTimeout(autoDistortTimer);
-		}
-	});
+	
+	const right = window.innerWidth;
+	const bottom = window.innerHeight;
+	const onKillCallback = function(dx, dy) {
+		checkIntersectionMod(dx, dy);
+		//clearTimeout(autoDistortTimer);
+	};
+	
+	game = new AsteroidsGame(stage, right, bottom, onKillCallback);
 
 	window.addEventListener('resize', function() {
-		resizeCanvas()
-		game.updateSize()
+		resizeCanvas();
+		game.updateSize(window.innerWidth, window.innerHeight);
 	});
 }
 
