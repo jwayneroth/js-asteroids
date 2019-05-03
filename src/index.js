@@ -2,6 +2,7 @@
 import createjs from "createjs";
 import AsteroidsGame from './lib/game.js'
 import './scss/styles.scss'
+import vectorbg from './assets/images/vector-bg.png';
 
 const DISPLACEMENT      = -.3, //-0.16,
 			SPRING_STRENGTH   = 0.0005,
@@ -21,6 +22,7 @@ function init() {
 
 function initThree() {
 	scene = new THREE.Scene();
+	//scene.background = new THREE.TextureLoader().load('images/vector-bg.png');
 	scene.background = new THREE.Color( 0x121212 );
 	camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
 	camera.position.x = 0;
@@ -49,10 +51,9 @@ function initThree() {
 		bloomRadius: 0
 	};
 	
-	scene.add( new THREE.AmbientLight( 0x404040 ) );
-	
-	var pointLight = new THREE.PointLight( 0xffffff, 1 );
-	camera.add( pointLight );
+	//scene.add( new THREE.AmbientLight( 0x404040 ) );
+	//var pointLight = new THREE.PointLight( 0xffffff, 1 );
+	//camera.add( pointLight );
 	
 	var renderScene = new THREE.RenderPass( scene, camera );
 	
