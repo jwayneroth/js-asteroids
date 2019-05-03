@@ -8,11 +8,19 @@
 		<script src="js/vendor/modernizr-2.8.3.min.js"></script>
 		<script src="js/vendor/createjs-2015.11.26.combined.js"></script>
 		<script src="js/lib/asteroids-assets.js"></script>
+		<script src="js/lib/three.min.js"></script>
+		<script src="js/lib/postprocessing/EffectComposer.js"></script>
+		<script src="js/lib/postprocessing/RenderPass.js"></script>
+		<script src="js/lib/postprocessing/ShaderPass.js"></script>
+		<script src="js/lib/shaders/CopyShader.js"></script>
+		<script src="js/lib/shaders/LuminosityHighPassShader.js"></script>
+		<script src="js/lib/postprocessing/UnrealBloomPass.js"></script>
 	</head>
 	<body>
 		<div id="animation_container">
-			<canvas id="canvas" width="500" height="500"></canvas>
+			<canvas id="canvas" width="500" height="500" style="display: none;"></canvas>
 			<div id="dom_overlay_container"></div>
+			<div id="WebGL-output" style="position: fixed; left: 0; top: 0; right: 0; bottom: 0; width: 100%; height: 100%;"></div>
 		</div>
 	</body>
 </html>

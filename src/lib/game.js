@@ -19,10 +19,14 @@ const FIRE_DELAY = 175;
  * arg stage: cjs Stage Object
  */
 export default class AsteroidsGame {
-	constructor(stage) { 
+	constructor(stage, options = {
+		right: window.innerWidth,
+		bottom: window.innerHeight
+	}) { 
 		//console.log('AsteroidsGame::constructor');
 		
 		this.stage = stage;
+		this.options = options;
 		this.stage.name = 'AsteroidsStage';
 		this.canvas = stage.canvas;
 		this.right = this.canvas.width;
@@ -83,7 +87,7 @@ export default class AsteroidsGame {
 		
 		const w = this.canvas.width,
 		      h = this.canvas.height;
-		      
+		
 		let i = 0;
 		
 		this.stage.width = this.right = w;
@@ -267,6 +271,10 @@ export default class AsteroidsGame {
 				}
 				
 				this.removeEnemyByName(enemy.clip.name); //this.enemiesArray.splice(i,1);
+				
+				if (this.options.killCallback) {
+					this.options.killCallback(enemy.getX(), enemy.getY());
+				}
 				
 				break;
 			}
@@ -452,6 +460,7 @@ export default class AsteroidsGame {
 	 * main game loop
 	 */
 	gameRun() {
+		//console.log('gameRun');
 		
 		this.ticks++;
 		
