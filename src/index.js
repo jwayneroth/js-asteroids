@@ -28,7 +28,7 @@ function initThree() {
 	document.body.appendChild( stats.dom );
 	scene = new THREE.Scene();
 	//scene.background = new THREE.TextureLoader().load('images/vector-bg.png');
-	scene.background = new THREE.Color( 0x121212 );
+	scene.background = new THREE.Color( 0x000000 );
 	camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
 	camera.position.x = 0;
 	camera.position.y = 0;
@@ -74,11 +74,15 @@ function initThree() {
 	renderer.toneMapping = THREE.ReinhardToneMapping;
 	//////////////////////////////
 	
-	requestAnimationFrame( animate )
+	//requestAnimationFrame( animate )
+	createjs.Ticker.framerate = 26;
+	createjs.Ticker.timingMode = 'RAF_SYNCHED';
+	createjs.Ticker.addEventListener("tick", animate);
 }
 
 function animate () {
 	stats.begin();
+	
 	updateVertexSprings();
 	plane.material.map.needsUpdate = true
 	plane.geometry.verticesNeedUpdate = true;
@@ -87,8 +91,15 @@ function animate () {
 	plane.geometry.computeVertexNormals();
 	//renderer.render(scene, camera);
 	composer.render();
+	
+	game.gameRun();
+	
+	if (Date.now() % 1000 === 0) {
+		console.log('Ticker FPS:' + createjs.Ticker.getMeasuredFPS());
+	}
 	stats.end();
-	requestAnimationFrame( animate );
+	
+	//requestAnimationFrame( animate );
 }
 
 function createObjects() {
@@ -335,12 +346,10 @@ function bindCallbacks() {
 function initGame() {
 	console.log('init')
 	canvas = document.getElementById("canvas");
-	stage = new createjs.Stage(canvas);
 	anim_container = document.getElementById("animation_container");
 	dom_overlay_container = document.getElementById("dom_overlay_container");
-
 	let lastW = -1, lastH = -1;
-
+	
 	function resizeCanvas() {
 		const w = lib.properties.width,
 					h = lib.properties.height;
@@ -366,8 +375,11 @@ function initGame() {
 		lastW = iw;
 		lastH = ih;
 	}
-
+	
 	resizeCanvas();
+	
+	stage = new createjs.StageGL(canvas, { antialias: true });
+	stage.setClearColor('#000000');
 	
 	const right = window.innerWidth;
 	const bottom = window.innerHeight;
@@ -381,6 +393,9 @@ function initGame() {
 	window.addEventListener('resize', function() {
 		resizeCanvas();
 		game.updateSize(window.innerWidth, window.innerHeight);
+		//camera.aspect = window.innerWidth / window.innerHeight;
+		//camera.updateProjectionMatrix();
+		renderer.setSize( window.innerWidth, window.innerHeight );
 	});
 }
 

@@ -28,7 +28,7 @@ export default class AsteroidsGame {
 		this.right = right
 		this.bottom = bottom;
 		this.onKillCallback = onKillCallback;
-		this.fps = lib.properties.fps;
+		this.fps = lib.properties.fps; //24
 		
 		this.key = new KeyListener();
 		
@@ -72,17 +72,39 @@ export default class AsteroidsGame {
 		this.makeShip();
 		this.makeAlienID.start(this.ticks);
 		
-		createjs.Ticker.setFPS(this.fps);
-		createjs.Ticker.addEventListener("tick", this.gameRun.bind(this));
+		//createjs.Ticker.setFPS(this.fps);
+		//createjs.Ticker.addEventListener("tick", this.gameRun.bind(this));
 	}
 	
 	makeBg() {
-		var bg = new createjs.Bitmap("images/vector-bg.png");
-		var size = (this.right > this.bottom) ? this.right : this.bottom;
-		var scale = size / 1000;
-		console.log('bg scale ' + scale);
-		bg.scaleX = bg.scaleY = scale;
+		console.log('makeBg');
+		
+		//var bg = new createjs.Bitmap("images/vector-bg.png");
+		var bg = new createjs.Shape();
+		this.bg = bg;
 		this.stage.addChild(bg);
+		
+		this.renderBg();
+	}
+	
+	renderBg() {
+		var bg = this.bg;
+		var size = (this.right > this.bottom) ? this.right : this.bottom;
+		
+		bg.graphics.clear();
+		bg.graphics.beginStroke('#00ccff');
+		const inc = size / 20;
+		for(var i=1; i<20; i++) {
+			bg.graphics.moveTo(i * inc, 0).lineTo(i * inc, size);
+			bg.graphics.moveTo(0, i * inc).lineTo(size, i * inc);
+		}
+		bg.graphics.endStroke();
+		
+		if (bg.cacheCanvas) bg.uncache();
+		bg.cache(0, 0, size, size);
+		
+		//var scale = size / 1000;
+		//bg.scaleX = bg.scaleY = scale;
 	}
 	
 	/**
@@ -100,6 +122,13 @@ export default class AsteroidsGame {
 		this.stage.width = this.right = w;
 		this.stage.height = this.bottom = h;
 		
+		/*
+		var size = (this.right > this.bottom) ? this.right : this.bottom;
+		var scale = size / 1000;
+		this.bg.scaleX = this.bg.scaleY = scale;
+		*/
+		this.renderBg();
+		
 		for(i=0; i<this.enemiesArray.length; i++) {
 			this.enemiesArray[i].setWalls(w, h);
 		}
@@ -109,6 +138,8 @@ export default class AsteroidsGame {
 		}
 		
 		this.ship.setWalls(w, h);
+		
+		this.stage.updateViewport(w, h);
 	}
 	
 	onShipLifeChange(evt, alive) {
@@ -186,6 +217,8 @@ export default class AsteroidsGame {
 		ship_clip.gotoAndStop('off');
 		
 		this.ship = new Ship(ship_clip, this.right, this.bottom, this.right/2, this.bottom/2, .3, .999, this.key);
+		
+		//ship_clip.cache(0, 0, ship_clip.nominalBounds.width, ship_clip.nominalBounds.height);
 		
 		this.stage.addChild(ship_clip);
 		

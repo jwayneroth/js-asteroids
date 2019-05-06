@@ -10,6 +10,9 @@ export default class Ship extends SpaceObject {
 	constructor(clip, _right, _bottom, xPos, yPos, thrustIn, frictionIn, keyListener = new KeyListener()) {
 		super(clip, _right, _bottom, xPos, yPos)
 		
+		clip.uncache();
+		clip.ship_inner.cache(0,0,20,16);
+		
 		console.log('Ship::constructor')
 		
 		this.tickDelegate = null
