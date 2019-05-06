@@ -66,6 +66,7 @@ export default class AsteroidsGame {
 		$(window).on('alienLaserAdded', this.alienLaserAdded.bind(this));
 		$(window).on('alienLaserKilled', this.alienLaserKilled.bind(this));
 		
+		this.makeBg();
 		this.makeLasers();
 		this.makeAsteroids(ASTEROID_COUNT);
 		this.makeShip();
@@ -73,6 +74,15 @@ export default class AsteroidsGame {
 		
 		createjs.Ticker.setFPS(this.fps);
 		createjs.Ticker.addEventListener("tick", this.gameRun.bind(this));
+	}
+	
+	makeBg() {
+		var bg = new createjs.Bitmap("images/vector-bg.png");
+		var size = (this.right > this.bottom) ? this.right : this.bottom;
+		var scale = size / 1000;
+		console.log('bg scale ' + scale);
+		bg.scaleX = bg.scaleY = scale;
+		this.stage.addChild(bg);
 	}
 	
 	/**

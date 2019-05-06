@@ -3,6 +3,7 @@ import createjs from "createjs";
 import AsteroidsGame from './lib/game.js'
 import './scss/styles.scss'
 import vectorbg from './assets/images/vector-bg.png';
+var Stats = require('stats.js')
 
 const DISPLACEMENT      = -.3, //-0.16,
 			SPRING_STRENGTH   = 0.0005,
@@ -14,6 +15,7 @@ let game;
 let scene, renderer, camera, planeGeometry, planeMap, planeMaterial, plane;
 let callbacks, mousePressed, autoDistortTimer;
 let composer;
+let stats;
 
 function init() {
 	initGame();
@@ -21,6 +23,9 @@ function init() {
 }
 
 function initThree() {
+	stats = new Stats();
+	stats.showPanel( 0 );
+	document.body.appendChild( stats.dom );
 	scene = new THREE.Scene();
 	//scene.background = new THREE.TextureLoader().load('images/vector-bg.png');
 	scene.background = new THREE.Color( 0x121212 );
@@ -73,6 +78,7 @@ function initThree() {
 }
 
 function animate () {
+	stats.begin();
 	updateVertexSprings();
 	plane.material.map.needsUpdate = true
 	plane.geometry.verticesNeedUpdate = true;
@@ -81,6 +87,7 @@ function animate () {
 	plane.geometry.computeVertexNormals();
 	//renderer.render(scene, camera);
 	composer.render();
+	stats.end();
 	requestAnimationFrame( animate );
 }
 
@@ -88,7 +95,7 @@ function createObjects() {
 	const maxWidth = visibleWidthAtZDepth( -100, camera);
 	var height = visibleHeightAtZDepth( -100, camera )
 	var width = height * camera.aspect;
-	planeGeometry = new THREE.PlaneGeometry(width, height, 20, 10); //maxWidth, maxWidth/2, 20, 10);
+	planeGeometry = new THREE.PlaneGeometry(width, height, 20, 20); //maxWidth, maxWidth/2, 20, 10);
 	planeMap = new THREE.Texture(game.stage.canvas);    
 	planeMap.minFilter = THREE.LinearFilter;
 	planeMap.magFilter = THREE.LinearFilter;
