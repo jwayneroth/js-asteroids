@@ -13,13 +13,16 @@ const ASTEROID_COUNT = 8;
 const NUM_LASERS = 20;
 const NUM_LIVES = 1;
 const FIRE_DELAY = 175;
+const ASTEROID_LARGE_VALUE = 1;
+const ASTEROID_SMALL_VALUE = 10;
+const ALIEN_VALUE = 25;
 
 /*
  * AsteroidsGame
  * arg stage: cjs Stage Object
  */
 export default class AsteroidsGame {
-	constructor(stage, right, bottom, onKillCallback) { 
+	constructor(stage, right, bottom, onKillCallback, onDieCallback) { 
 		//console.log('AsteroidsGame::constructor');
 		
 		this.stage = stage;
@@ -28,7 +31,9 @@ export default class AsteroidsGame {
 		this.right = right
 		this.bottom = bottom;
 		this.onKillCallback = onKillCallback;
+		this.onDieCallback = onDieCallback;
 		this.fps = lib.properties.fps; //24
+		this.scoreText;
 		
 		this.key = new KeyListener();
 		
@@ -53,6 +58,7 @@ export default class AsteroidsGame {
 		this.debrisNo = 0;
 		this.levelNo = 1;
 		this.alienDelay = 8000;
+		this.score = 0;
 		
 		// intervals
 		this.makeAlienID = new GameTimer(this.makeAlien, this, 2 * this.fps);
@@ -71,6 +77,7 @@ export default class AsteroidsGame {
 		this.makeAsteroids(ASTEROID_COUNT);
 		this.makeShip();
 		this.makeAlienID.start(this.ticks);
+		this.makeScoreText();
 		
 		//createjs.Ticker.setFPS(this.fps);
 		//createjs.Ticker.addEventListener("tick", this.gameRun.bind(this));
@@ -92,7 +99,8 @@ export default class AsteroidsGame {
 		var size = (this.right > this.bottom) ? this.right : this.bottom;
 		
 		bg.graphics.clear();
-		bg.graphics.beginStroke('#00ccff');
+		bg.graphics.setStrokeStyle(2);
+		bg.graphics.beginStroke('#0066ff'); //'#00ccff');
 		const inc = size / 20;
 		for(var i=1; i<20; i++) {
 			bg.graphics.moveTo(i * inc, 0).lineTo(i * inc, size);
@@ -105,6 +113,22 @@ export default class AsteroidsGame {
 		
 		//var scale = size / 1000;
 		//bg.scaleX = bg.scaleY = scale;
+	}
+	
+	makeScoreText() {
+		var txt = new createjs.Text('Score: ' + this.score, "20px Arial", "#aaaaaa");
+		txt.x = this.right - 130;
+		txt.y = 20;
+		txt.cache(0,0,200,200);
+		this.scoreText = txt;
+		this.stage.addChild(txt);
+	}
+	
+	updateScore(value) {
+		console.log('updateScore ' + value);
+		this.score += value;
+		this.scoreText.text = 'Score: ' + this.score;
+		this.scoreText.updateCache();
 	}
 	
 	/**
@@ -139,7 +163,9 @@ export default class AsteroidsGame {
 		
 		this.ship.setWalls(w, h);
 		
-		this.stage.updateViewport(w, h);
+		this.scoreText.x = this.right - 100;
+		
+		//this.stage.updateViewport(w, h);
 	}
 	
 	onShipLifeChange(evt, alive) {
@@ -300,13 +326,16 @@ export default class AsteroidsGame {
 				if (enemy.objectType === 'asteroid') {
 					this.makeDebris(enemy);
 					this.numKilled++;
+					this.updateScore(ASTEROID_LARGE_VALUE);
 					this.checkProgress();
 				} else if (enemy.objectType === 'debris') {
 					this.makeSplinters(enemy);
 					this.numKilled++;
+					this.updateScore(ASTEROID_SMALL_VALUE);
 					this.checkProgress();
 				} else if (enemy.objectType === 'alien') {
 					this.aliensOut--;
+					this.updateScore(ALIEN_VALUE);
 					this.makeShipDebris(enemy);
 				}
 				
@@ -411,6 +440,8 @@ export default class AsteroidsGame {
 					this.killGame();
 					this.restartID.start(this.ticks);
 				}*/
+				
+				this.onDieCallback(this.ship.getX(), this.ship.getY());
 				
 				if (enemy.objectType === "alien") {
 					this.makeShipDebris(enemy);

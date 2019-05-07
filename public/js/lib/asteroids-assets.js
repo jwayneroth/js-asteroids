@@ -55,7 +55,7 @@ function getMCSymbolPrototype(symbol, nominalBounds, frameBounds) {
 
 	// Layer 1
 	this.shape = new cjs.Shape();
-	this.shape.graphics.f().s("#00CC66").ss(1,1,1).p("AhignIBPgoIB3BPIh3BQIhQgog");
+	this.shape.graphics.f().s("#00CC66").ss(2,1,1).p("AhignIBPgoIB3BPIh3BQIhQgog");
 	this.shape.setTransform(9.975,8);
 
 	this.shape_1 = new cjs.Shape();
@@ -194,30 +194,35 @@ function getMCSymbolPrototype(symbol, nominalBounds, frameBounds) {
 	this.timeline.addTween(cjs.Tween.get(this.ship_inner).wait(10).to({alpha:0},0).to({alpha:1},4).to({alpha:0},4).wait(13).to({alpha:1},0).wait(7));
 
 	// Layer 7
-	this.instance = new lib.thrustparticle();
-	this.instance.parent = this;
-	this.instance.setTransform(-14.35,3.1,0.4,0.4,-30,0,0,0.2,0.1);
+	this.tp2 = new lib.thrustparticle();
+	this.tp2.name = "tp2";
+	this.tp2.parent = this;
+	this.tp2.setTransform(-14.35,3.1,0.4,0.4,-30,0,0,0.2,0.1);
 
-	this.instance_1 = new lib.thrustparticle();
-	this.instance_1.parent = this;
-	this.instance_1.setTransform(-12.85,0.6,0.4492,0.4492,44.9064,0,0,-0.1,0.4);
-	this.instance_1.alpha = 0.5;
+	this.tp3 = new lib.thrustparticle();
+	this.tp3.name = "tp3";
+	this.tp3.parent = this;
+	this.tp3.setTransform(-12.85,0.6,0.4492,0.4492,44.9064,0,0,-0.1,0.4);
+	this.tp3.alpha = 0.5;
 
-	this.instance_2 = new lib.thrustparticle();
-	this.instance_2.parent = this;
-	this.instance_2.setTransform(-12.4,-3.5,0.45,0.45,-89.9883,0,0,0,0.5);
+	this.tp1 = new lib.thrustparticle();
+	this.tp1.name = "tp1";
+	this.tp1.parent = this;
+	this.tp1.setTransform(-12.4,-3.5,0.45,0.45,-89.9883,0,0,0,0.5);
 
-	this.instance_3 = new lib.thrustparticle();
-	this.instance_3.parent = this;
-	this.instance_3.setTransform(-9.65,1.15,0.4848,0.4848,-45,0,0,0,0.3);
-	this.instance_3.alpha = 0;
+	this.tp5 = new lib.thrustparticle();
+	this.tp5.name = "tp5";
+	this.tp5.parent = this;
+	this.tp5.setTransform(-9.65,1.15,0.4848,0.4848,-45,0,0,0,0.3);
+	this.tp5.alpha = 0;
 
-	this.instance_4 = new lib.thrustparticle();
-	this.instance_4.parent = this;
-	this.instance_4.setTransform(-10.75,-1.25,0.5714,0.5714,-45,0,0,0.1,0.4);
-	this.instance_4.alpha = 0;
+	this.tp4 = new lib.thrustparticle();
+	this.tp4.name = "tp4";
+	this.tp4.parent = this;
+	this.tp4.setTransform(-10.75,-1.25,0.5714,0.5714,-45,0,0,0.1,0.4);
+	this.tp4.alpha = 0;
 
-	this.timeline.addTween(cjs.Tween.get({}).to({state:[]}).to({state:[{t:this.instance_4,p:{alpha:0}},{t:this.instance_3,p:{alpha:0}},{t:this.instance_2,p:{alpha:1}},{t:this.instance_1,p:{alpha:0.5}},{t:this.instance,p:{alpha:1}}]},31).to({state:[{t:this.instance_4,p:{alpha:0.5}},{t:this.instance_3,p:{alpha:0.5}},{t:this.instance_2,p:{alpha:0.5}},{t:this.instance_1,p:{alpha:1}},{t:this.instance,p:{alpha:0.5}}]},2).to({state:[{t:this.instance_4,p:{alpha:1}},{t:this.instance_3,p:{alpha:1}},{t:this.instance_2,p:{alpha:0}},{t:this.instance_1,p:{alpha:0.5}},{t:this.instance,p:{alpha:0}}]},2).to({state:[{t:this.instance_4,p:{alpha:0.5}},{t:this.instance_3,p:{alpha:0.5}},{t:this.instance_2,p:{alpha:0.5}},{t:this.instance_1,p:{alpha:0}},{t:this.instance,p:{alpha:0.5}}]},2).wait(1));
+	this.timeline.addTween(cjs.Tween.get({}).to({state:[]}).to({state:[{t:this.tp4,p:{alpha:0}},{t:this.tp5,p:{alpha:0}},{t:this.tp1,p:{alpha:1}},{t:this.tp3,p:{alpha:0.5}},{t:this.tp2,p:{alpha:1}}]},31).to({state:[{t:this.tp4,p:{alpha:0.5}},{t:this.tp5,p:{alpha:0.5}},{t:this.tp1,p:{alpha:0.5}},{t:this.tp3,p:{alpha:1}},{t:this.tp2,p:{alpha:0.5}}]},2).to({state:[{t:this.tp4,p:{alpha:1}},{t:this.tp5,p:{alpha:1}},{t:this.tp1,p:{alpha:0}},{t:this.tp3,p:{alpha:0.5}},{t:this.tp2,p:{alpha:0}}]},2).to({state:[{t:this.tp4,p:{alpha:0.5}},{t:this.tp5,p:{alpha:0.5}},{t:this.tp1,p:{alpha:0.5}},{t:this.tp3,p:{alpha:0}},{t:this.tp2,p:{alpha:0.5}}]},2).wait(1));
 
 }).prototype = p = new cjs.MovieClip();
 p.nominalBounds = new cjs.Rectangle(-16.2,-9,29.299999999999997,18);
@@ -291,16 +296,6 @@ an.compositionLoaded = function(id) {
 an.getComposition = function(id) {
 	return an.compositions[id];
 }
-// library properties:
-lib.properties = {
-	width: 500,
-	height: 500,
-	fps: 24,
-	color: "#FFFFFF",
-	opacity: 1.00,
-	manifest: [],
-	preloads: []
-};
 
 
 

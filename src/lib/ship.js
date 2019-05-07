@@ -11,8 +11,10 @@ export default class Ship extends SpaceObject {
 		super(clip, _right, _bottom, xPos, yPos)
 		
 		clip.uncache();
-		clip.ship_inner.cache(0,0,20,16);
-		
+		clip.ship_inner.cache(-10,-10,100,100,1);
+		for(var i=0; i<5; i++) {
+			clip['tp' + (i+1)].cache(-0,0,5,5);
+		}
 		console.log('Ship::constructor')
 		
 		this.tickDelegate = null

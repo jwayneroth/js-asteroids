@@ -5,11 +5,11 @@ import './scss/styles.scss'
 import vectorbg from './assets/images/vector-bg.png';
 var Stats = require('stats.js')
 
-const DISPLACEMENT      = -.3, //-0.16,
+const DISPLACEMENT      = -.2, //-0.16,
 			SPRING_STRENGTH   = 0.0005,
 			DAMPEN            = 0.15, //0.998,
 			RESOLUTION        = window.devicePixelRatio || 1;
-	
+
 let canvas, stage, anim_container, dom_overlay_container;
 let game;
 let scene, renderer, camera, planeGeometry, planeMap, planeMaterial, plane;
@@ -33,13 +33,14 @@ function initThree() {
 	camera.position.x = 0;
 	camera.position.y = 0;
 	camera.position.z = 0;
-	camera.lookAt(scene.position);
+	//camera.lookAt(scene.position);
 	renderer = new THREE.WebGLRenderer({
-		antialias: false,
+		antialias: true,
 	});
 	renderer.setSize(window.innerWidth, window.innerHeight);
+	//renderer.autoClear = false;
 	renderer.setPixelRatio(window.devicePixelRatio || 1);
-	renderer.shadowMap.enabled = true;
+	//renderer.shadowMap.enabled = true;
 	renderer.render(scene, camera);
 	document.getElementById("WebGL-output").appendChild(renderer.domElement);
 	createObjects();
@@ -51,7 +52,7 @@ function initThree() {
 	//////////////////////////////
 	var params = {
 		exposure: 1,
-		bloomStrength: 2.5, //1.5,
+		bloomStrength: 2.0, //1.5,
 		bloomThreshold: 0,
 		bloomRadius: 0
 	};
@@ -70,8 +71,8 @@ function initThree() {
 	composer = new THREE.EffectComposer( renderer );
 	composer.setSize( window.innerWidth, window.innerHeight );
 	composer.addPass( renderScene );
-	composer.addPass( bloomPass );
-	renderer.toneMapping = THREE.ReinhardToneMapping;
+	//composer.addPass( bloomPass );
+	//renderer.toneMapping = THREE.ReinhardToneMapping;
 	//////////////////////////////
 	
 	//requestAnimationFrame( animate )
@@ -84,11 +85,13 @@ function animate () {
 	stats.begin();
 	
 	updateVertexSprings();
+	
 	plane.material.map.needsUpdate = true
 	plane.geometry.verticesNeedUpdate = true;
 	plane.geometry.normalsNeedUpdate = true;
 	plane.geometry.computeFaceNormals();
 	plane.geometry.computeVertexNormals();
+	
 	//renderer.render(scene, camera);
 	composer.render();
 	
@@ -107,10 +110,12 @@ function createObjects() {
 	var height = visibleHeightAtZDepth( -100, camera )
 	var width = height * camera.aspect;
 	planeGeometry = new THREE.PlaneGeometry(width, height, 20, 20); //maxWidth, maxWidth/2, 20, 10);
-	planeMap = new THREE.Texture(game.stage.canvas);    
+	planeMap = new THREE.Texture(game.stage.canvas);  
+	//planeMap.needsUpdate = true;  
 	planeMap.minFilter = THREE.LinearFilter;
 	planeMap.magFilter = THREE.LinearFilter;
 	planeMap.generateMipmaps = false;
+	//planeMap.anisotropy = 16;
 	//planeMap.flipY = false;
 	planeMaterial = new THREE.MeshBasicMaterial({color: 0xffffff});
 	planeMaterial.map = planeMap;
@@ -182,20 +187,14 @@ function visibleHeightAtZDepth ( depth, camera ) {
 
 function displaceFace(face, magnitude) {
 	//console.log('displaceFace');
+	
 	displaceVertex(face.a, magnitude);
 	displaceVertex(face.b, magnitude);
 	displaceVertex(face.c, magnitude);
+	
 	if(face instanceof THREE.Face4) {
 		displaceVertex(face.d, magnitude);
 	}
-}
-
-function displaceRandomFace() {
-	var planeFaces      = plane.geometry.faces,
-			randomFaceIndex = Math.floor(Math.random() * planeFaces.length),
-			randomFace      = planeFaces[randomFaceIndex];
-	displaceFace(randomFace, DISPLACEMENT);
-	autoDistortTimer = setTimeout(displaceRandomFace, 100);
 }
 
 function displaceVertex(vertex, magnitude) {
@@ -215,6 +214,7 @@ function updateVertexSprings() {
 			force          = 0,
 			vertex         = null,
 			acceleration   = new THREE.Vector3(0, 0, 0);
+	
 	while(vertexCount--) {
 		vertex = planeVertices[vertexCount];
 		vertexSprings = vertex.springs;
@@ -242,24 +242,8 @@ function updateVertexSprings() {
 	}
 }
 
-function checkIntersection(evt) {
-	var mouse = new THREE.Vector2(),
-			mouseX    = evt.offsetX || evt.clientX,
-			mouseY    = evt.offsetY || evt.clientY,
-			raycaster = new THREE.Raycaster(),
-			intersects = null
-	mouse.x = (mouseX / window.innerWidth) * 2 - 1
-	mouse.y = -(mouseY / window.innerHeight) * 2 + 1
-	//console.log('checkIntersection', mouseX, mouseY)
-	raycaster.setFromCamera( mouse, camera );
-	intersects = raycaster.intersectObject(plane);
-	if(intersects.length) {
-		displaceFace(intersects[0].face, DISPLACEMENT);
-	}
-}
-
-function checkIntersectionMod(mouseX, mouseY) {
-	//console.log('checkIntersectionMod', mouseX, mouseY);
+function checkIntersection(mouseX, mouseY) {
+	//console.log('checkIntersection', mouseX, mouseY);
 	var mouse = new THREE.Vector2(),
 			//mouseX    = evt.offsetX || evt.clientX,
 			//mouseY    = evt.offsetY || evt.clientY,
@@ -269,78 +253,17 @@ function checkIntersectionMod(mouseX, mouseY) {
 	mouse.y = -(mouseY / window.innerHeight) * 2 + 1
 	raycaster.setFromCamera( mouse, camera );
 	intersects = raycaster.intersectObject(plane);
+	
 	if(intersects.length) {
+		
 		const dID = setInterval(function() {
 			displaceFace(intersects[0].face, DISPLACEMENT);
 		}, 50);
+		
 		setTimeout(function() {
 			clearInterval(dID);
-		}, 500);
+		}, 350);
 	}
-}
-
-function bindCallbacks() {
-	callbacks = {
-		onResize: function() {
-			camera.aspect = window.innerWidth / window.innerHeight;
-			camera.updateProjectionMatrix();
-			renderer.setSize( window.innerWidth, window.innerHeight );
-		},
-		onMouseOver: function(evt) {
-			mousePressed = true;
-			checkIntersection(evt);
-			clearTimeout(autoDistortTimer);
-		},
-		onMouseMove: function(evt) {
-			if(mousePressed) {
-				checkIntersection(evt);
-			}
-		},
-		onMouseOut: function() {
-			console.log('onMouseOut');
-			mousePressed = false;
-			autoDistortTimer = setTimeout(displaceRandomFace, 2000);
-		},
-		onSelectStart: function() {
-			return false;
-		},
-		onKeyUp: function(evt) {
-			var key = evt.key || evt.keyCode;
-			console.log('key pressed!', key)
-			if (key === 'Enter' || key === 'Ent' || key === 13) {
-				console.log('Enter pressed!')
-				document.removeEventListener('keyup', callbacks.onKeyUp, false)
-				canvasUpdated = false
-				return
-			}
-			if(userTextInputStarted === false) {
-				userTextInputStarted = true
-				canvasUpdated = true
-				document.getElementById('introText').textContent = key
-			} else {
-				document.getElementById('introText').textContent += key
-			}
-		},
-		onInput: function(evt) {
-			document.getElementById('introText').textContent = evt.target.value
-			canvasUpdated = true
-		},
-		onClick: function(evt) {
-			console.log("I've been touched!")
-			document.getElementById('user_name').focus()
-		},
-		onNameFormSubmit: function (evt) {
-			console.log('User name form submitted!')
-			evt.preventDefault()
-			window.user_name = document.getElementById('user_name').value
-			console.log('username is: ' + window.user_name)
-			return false
-		}
-	}
-	window.addEventListener('resize', callbacks.onResize, false)
-	window.addEventListener('mouseover', callbacks.onMouseOver, false)
-	window.addEventListener('mousemove', callbacks.onMouseMove, false)
-	window.addEventListener('mouseout', callbacks.onMouseOut, false)
 }
 
 function initGame() {
@@ -378,17 +301,18 @@ function initGame() {
 	
 	resizeCanvas();
 	
-	stage = new createjs.StageGL(canvas, { antialias: true });
-	stage.setClearColor('#000000');
+	stage = new createjs.Stage(canvas); //StageGL(canvas, { antialias: true });
+	//stage.setClearColor('#000000');
 	
 	const right = window.innerWidth;
 	const bottom = window.innerHeight;
 	const onKillCallback = function(dx, dy) {
-		checkIntersectionMod(dx, dy);
-		//clearTimeout(autoDistortTimer);
+		checkIntersection(dx, dy);
 	};
-	
-	game = new AsteroidsGame(stage, right, bottom, onKillCallback);
+	const onDieCallback = function(dx, dy) {
+		checkIntersection(dx, dy);
+	};
+	game = new AsteroidsGame(stage, right, bottom, onKillCallback, onDieCallback);
 
 	window.addEventListener('resize', function() {
 		resizeCanvas();
