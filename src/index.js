@@ -51,12 +51,12 @@ function initThree() {
 	// from unreal bloom example
 	//////////////////////////////
 	var params = {
-		exposure: 1,
-		bloomStrength: 2.0, //1.5,
-		bloomThreshold: 0,
-		bloomRadius: 0
+		exposure: 1.1,               // 0 - 2
+		bloomStrength: 2.5, //1.5,  // 0 - 3 
+		bloomThreshold: 0,          // 0 - 1
+		bloomRadius: 0              // 0 - 1
 	};
-	
+
 	//scene.add( new THREE.AmbientLight( 0x404040 ) );
 	//var pointLight = new THREE.PointLight( 0xffffff, 1 );
 	//camera.add( pointLight );
@@ -71,8 +71,9 @@ function initThree() {
 	composer = new THREE.EffectComposer( renderer );
 	composer.setSize( window.innerWidth, window.innerHeight );
 	composer.addPass( renderScene );
-	//composer.addPass( bloomPass );
-	//renderer.toneMapping = THREE.ReinhardToneMapping;
+	composer.addPass( bloomPass );
+	renderer.toneMapping = THREE.ReinhardToneMapping;
+	renderer.toneMappingExposure = Math.pow( params.exposure, 4.0 );
 	//////////////////////////////
 	
 	//requestAnimationFrame( animate )
@@ -109,15 +110,15 @@ function createObjects() {
 	const maxWidth = visibleWidthAtZDepth( -100, camera);
 	var height = visibleHeightAtZDepth( -100, camera )
 	var width = height * camera.aspect;
-	planeGeometry = new THREE.PlaneGeometry(width, height, 20, 20); //maxWidth, maxWidth/2, 20, 10);
+	planeGeometry = new THREE.PlaneGeometry(width, height, 8, 8); //maxWidth, maxWidth/2, 20, 10);
 	planeMap = new THREE.Texture(game.stage.canvas);  
 	//planeMap.needsUpdate = true;  
 	planeMap.minFilter = THREE.LinearFilter;
 	planeMap.magFilter = THREE.LinearFilter;
-	planeMap.generateMipmaps = false;
+	//planeMap.generateMipmaps = false;
 	//planeMap.anisotropy = 16;
 	//planeMap.flipY = false;
-	planeMaterial = new THREE.MeshBasicMaterial({color: 0xffffff});
+	planeMaterial = new THREE.MeshBasicMaterial();
 	planeMaterial.map = planeMap;
 	plane = new THREE.Mesh(planeGeometry, planeMaterial);
 	plane.receiveShadow = false;
@@ -125,7 +126,7 @@ function createObjects() {
 	plane.position.x = 0;
 	plane.position.y = 0;
 	plane.position.z = -100;
-	scene.add(plane);
+	scene.add(plane);  
 }
 
 function createSprings() {
@@ -301,8 +302,8 @@ function initGame() {
 	
 	resizeCanvas();
 	
-	stage = new createjs.Stage(canvas); //StageGL(canvas, { antialias: true });
-	//stage.setClearColor('#000000');
+	stage = new createjs.StageGL(canvas, { antialias: true });
+	stage.setClearColor('#000000');
 	
 	const right = window.innerWidth;
 	const bottom = window.innerHeight;

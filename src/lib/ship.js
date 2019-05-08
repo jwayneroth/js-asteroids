@@ -13,7 +13,7 @@ export default class Ship extends SpaceObject {
 		clip.uncache();
 		clip.ship_inner.cache(-10,-10,100,100,1);
 		for(var i=0; i<5; i++) {
-			clip['tp' + (i+1)].cache(-0,0,5,5);
+			clip['tp' + (i+1)].cache(-20,-20,60,60);
 		}
 		console.log('Ship::constructor')
 		

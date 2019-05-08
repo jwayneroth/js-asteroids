@@ -8,6 +8,7 @@ import KeyListener from './key.js'
 import Laser from './Laser.js'
 import Ship from './ship.js'
 import Splinter from './splinter.js'
+import Centipede from './centipede.js'
 
 const ASTEROID_COUNT = 8;
 const NUM_LASERS = 20;
@@ -75,6 +76,7 @@ export default class AsteroidsGame {
 		this.makeBg();
 		this.makeLasers();
 		this.makeAsteroids(ASTEROID_COUNT);
+		this.makeCentipedes();
 		this.makeShip();
 		this.makeAlienID.start(this.ticks);
 		this.makeScoreText();
@@ -116,7 +118,7 @@ export default class AsteroidsGame {
 	}
 	
 	makeScoreText() {
-		var txt = new createjs.Text('Score: ' + this.score, "20px Arial", "#aaaaaa");
+		var txt = new createjs.Text(this.score, "bold 50px Roboto", "#00CC66");
 		txt.x = this.right - 130;
 		txt.y = 20;
 		txt.cache(0,0,200,200);
@@ -127,8 +129,8 @@ export default class AsteroidsGame {
 	updateScore(value) {
 		console.log('updateScore ' + value);
 		this.score += value;
-		this.scoreText.text = 'Score: ' + this.score;
-		this.scoreText.updateCache();
+		this.scoreText.text = this.score;
+		this.scoreText.updateCache(); 
 	}
 	
 	/**
@@ -235,6 +237,24 @@ export default class AsteroidsGame {
 		}
 	}
 	
+	makeCentipedes() {
+		
+		const count = 1;
+		
+		let centipede_clip, centipede;
+		
+		for(let i = 0; i<count; i++) {
+			
+			centipede_clip = new lib.centipede();
+			centipede_clip.name = 'centipede' + i;
+			centipede = new Centipede(centipede_clip, lib.follower, this.right, this.bottom);
+			
+			this.numToKill++;
+			this.stage.addChild(centipede_clip);
+			this.enemiesArray.push(centipede);
+		}
+	}
+	
 	makeShip() {
 	
 		const ship_clip = new lib.ship();
@@ -243,8 +263,6 @@ export default class AsteroidsGame {
 		ship_clip.gotoAndStop('off');
 		
 		this.ship = new Ship(ship_clip, this.right, this.bottom, this.right/2, this.bottom/2, .3, .999, this.key);
-		
-		//ship_clip.cache(0, 0, ship_clip.nominalBounds.width, ship_clip.nominalBounds.height);
 		
 		this.stage.addChild(ship_clip);
 		

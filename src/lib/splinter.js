@@ -13,10 +13,11 @@ export default class Splinter extends SpaceObject {
 		
 		const vx  = Math.random() * 12 - 6
 		const vy = Math.random() * 12 - 6
-		const vr  = 30
+		const vr  = Math.random() * 120 - 60 //30
 		
-		this.clip.scaleX = this.clip.scaleY = Math.random() * .7 + .25
-		
+		this.clip.scaleX = Math.random() * .7 + .25
+		this.clip.scaleY = Math.random() * .7 + .25
+		this.clip.rotation = Math.random() * 360;
 		this.setVels(vx, vy, vr)
 	}
 	
@@ -28,7 +29,7 @@ export default class Splinter extends SpaceObject {
 			this.clip.rotation += this.vr
 			this.clip.x += this.vx
 			this.clip.y += this.vy
-			this.clip.alpha -= .04
+			this.clip.alpha -= .01
 		}
 		this.checkWalls()
 	}
