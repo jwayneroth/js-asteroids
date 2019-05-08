@@ -2,7 +2,7 @@
 import createjs from "createjs";
 import AsteroidsGame from './lib/game.js'
 import './scss/styles.scss'
-import vectorbg from './assets/images/vector-bg.png';
+
 var Stats = require('stats.js')
 
 const DISPLACEMENT      = -.2, //-0.16,
