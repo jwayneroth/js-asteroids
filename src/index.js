@@ -302,8 +302,9 @@ function initGame() {
 	
 	resizeCanvas();
 	
-	stage = new createjs.StageGL(canvas, { antialias: true });
-	stage.setClearColor('#000000');
+	stage = new createjs.Stage(canvas);
+	//stage = new createjs.StageGL(canvas, { antialias: true });
+	//stage.setClearColor('#000000');
 	
 	const right = window.innerWidth;
 	const bottom = window.innerHeight;

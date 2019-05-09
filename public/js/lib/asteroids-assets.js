@@ -2,6 +2,8 @@
 
 var p; // shortcut to reference prototypes
 lib.ssMetadata = [];
+
+
 // symbols:
 // helper functions:
 
@@ -80,18 +82,23 @@ function getMCSymbolPrototype(symbol, nominalBounds, frameBounds) {
 (lib.follower = function(mode,startPosition,loop) {
 	this.initialize(mode,startPosition,loop,{});
 
-	// Layer_1
+	// Layer_2
 	this.shape = new cjs.Shape();
-	this.shape.graphics.f().s("#6600CC").ss(2,1,1).p("AAAjfIDACrIhJEUIjtAAIhJkUg");
-	this.shape.setTransform(-0.025,0.025);
+	this.shape.graphics.f("#FF3300").s().p("AgXAYQgLgKAAgOQAAgNALgKQAKgLANAAQAOAAAKALQALAKAAANQAAAOgLAKQgKALgOAAQgNAAgKgLg");
+	this.shape.setTransform(0,-18.55);
 
+	this.timeline.addTween(cjs.Tween.get(this.shape).wait(1));
+
+	// Layer_1
 	this.shape_1 = new cjs.Shape();
-	this.shape_1.graphics.f("#000000").s().p("Ah2DgIhJkUIC/irIDACrIhJEUg");
-	this.shape_1.setTransform(-0.025,0.025);
+	this.shape_1.graphics.f().s("#6600CC").ss(2,1,1).p("AAAjbIC+CoIhIEPIjrAAIhIkPg");
 
-	this.timeline.addTween(cjs.Tween.get({}).to({state:[{t:this.shape_1},{t:this.shape}]}).wait(1));
+	this.shape_2 = new cjs.Shape();
+	this.shape_2.graphics.f("#000000").s().p("Ah1DcIhIkOIC9ipIC+CpIhIEOg");
 
-}).prototype = getMCSymbolPrototype(lib.follower, new cjs.Rectangle(-20.2,-23.4,40.4,46.9), null);
+	this.timeline.addTween(cjs.Tween.get({}).to({state:[{t:this.shape_2},{t:this.shape_1}]}).wait(1));
+
+}).prototype = getMCSymbolPrototype(lib.follower, new cjs.Rectangle(-20,-23,40,46), null);
 
 
 (lib.debris = function(mode,startPosition,loop) {
@@ -110,16 +117,21 @@ function getMCSymbolPrototype(symbol, nominalBounds, frameBounds) {
 (lib.centipede = function(mode,startPosition,loop) {
 	this.initialize(mode,startPosition,loop,{});
 
-	// Layer_2
+	// Layer_3
 	this.shape = new cjs.Shape();
-	this.shape.graphics.f().s("#6600CC").ss(2,1,1).p("AAAjrID4C0IheEjIkyAAIhfkjg");
-	this.shape.setTransform(0.0074,-0.0082,1.2121,1.4846);
+	this.shape.graphics.f("#FFFF00").s().p("AgiAjQgPgPAAgUQAAgUAPgPQAOgOAUAAQAVAAAOAOQAPAPAAAUQAAAUgPAPQgOAPgVAAQgUAAgOgPg");
+	this.shape.setTransform(0,-29.3);
 
+	this.timeline.addTween(cjs.Tween.get(this.shape).wait(1));
+
+	// Layer_2
 	this.shape_1 = new cjs.Shape();
-	this.shape_1.graphics.f("#000000").s().p("AiYDsIhekjID2i0ID4C0IhfEjg");
-	this.shape_1.setTransform(0.0074,-0.0082,1.2121,1.4846);
+	this.shape_1.graphics.f().s("#6600CC").ss(2,1,1).p("AAAldIEsELIhyGwIlzAAIhymwg");
 
-	this.timeline.addTween(cjs.Tween.get({}).to({state:[{t:this.shape_1},{t:this.shape}]}).wait(1));
+	this.shape_2 = new cjs.Shape();
+	this.shape_2.graphics.f("#000000").s().p("Ai4FeIhzmwIErkLIEsELIhyGwg");
+
+	this.timeline.addTween(cjs.Tween.get({}).to({state:[{t:this.shape_2},{t:this.shape_1}]}).wait(1));
 
 }).prototype = getMCSymbolPrototype(lib.centipede, new cjs.Rectangle(-31.6,-36,63.1,72), null);
 
@@ -261,7 +273,7 @@ p.nominalBounds = new cjs.Rectangle(-28.2,-13,46.3,26);
 
 
 // stage content:
-(lib.asteroidsassets = function(mode,startPosition,loop) {
+(lib.asteroidsassets_20170509 = function(mode,startPosition,loop) {
 	this.initialize(mode,startPosition,loop,{});
 
 }).prototype = p = new cjs.MovieClip();
@@ -328,6 +340,7 @@ an.compositionLoaded = function(id) {
 an.getComposition = function(id) {
 	return an.compositions[id];
 }
+
 
 
 

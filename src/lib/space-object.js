@@ -32,7 +32,7 @@ export default class SpaceObject {
 		this.top = 0
 		this.left = 0
 		
-		clip.cache(clip.nominalBounds.x, clip.nominalBounds.y, clip.nominalBounds.width, clip.nominalBounds.height, 1);
+		//clip.cache(clip.nominalBounds.x, clip.nominalBounds.y, clip.nominalBounds.width, clip.nominalBounds.height, 1);
 		
 		this.setVels()
 		this.setBounds()

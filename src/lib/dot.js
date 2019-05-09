@@ -9,10 +9,18 @@ export default class Dot extends SpaceObject {
 	
 	initDot() {
 		this.objectType = "dot"
+		
 		const vx  = Math.random() * 16 -8
 		const vy = Math.random() * 16 -8
 		const vr  = 20
-		this.clip._xscale = this.clip._yscale = Math.random() * 30 + 10
+		
+		//this.clip._xscale = this.clip._yscale = Math.random() * 30 + 10
+		
+		this.clip.scaleX = Math.random() * 2 + .5
+		this.clip.scaleY = Math.random() * 2 + .5
+		
+		this.clip.rotation = Math.random() * 360;
+		
 		this.setVels(vx, vy, vr)
 	}
 	

@@ -9,6 +9,7 @@ import Laser from './Laser.js'
 import Ship from './ship.js'
 import Splinter from './splinter.js'
 import Centipede from './centipede.js'
+import Follower from './follower.js'
 
 const ASTEROID_COUNT = 8;
 const NUM_LASERS = 20;
@@ -76,7 +77,7 @@ export default class AsteroidsGame {
 		this.makeBg();
 		this.makeLasers();
 		this.makeAsteroids(ASTEROID_COUNT);
-		this.makeCentipedes();
+		this.makeCentipedes(1);
 		this.makeShip();
 		this.makeAlienID.start(this.ticks);
 		this.makeScoreText();
@@ -189,12 +190,27 @@ export default class AsteroidsGame {
 	}
 	
 	removeEnemyByName(name) {
+		const index = this.getEnemyIndexByName(name);
+		if (index !== null) {
+			return this.enemiesArray.splice(index,1);
+		}
+		return null;
+	}
+	
+	getEnemyIndexByName(name) {
 		let i = 0;
 		for(i=0; i<this.enemiesArray.length; i++) {
 			if (this.enemiesArray[i].clip.name === name) {
-				return this.enemiesArray.splice(i,1);
+				return i;
 			}
 		}
+		return null;
+	}
+	
+	getEnemyByName(name) {
+		const idx = this.getEnemyIndexByName(name);
+		if (idx !== null) return this.enemiesArray[idx];
+		return null;
 	}
 	
 	/**
@@ -237,17 +253,36 @@ export default class AsteroidsGame {
 		}
 	}
 	
-	makeCentipedes() {
+	makeCentipedes(count) {
 		
-		const count = 1;
-		
+		let i, j;
 		let centipede_clip, centipede;
+		let follower_clip, follower, followersArray;
 		
-		for(let i = 0; i<count; i++) {
+		for(i = 0; i<count; i++) {
 			
 			centipede_clip = new lib.centipede();
 			centipede_clip.name = 'centipede' + i;
-			centipede = new Centipede(centipede_clip, lib.follower, this.right, this.bottom);
+			centipede = new Centipede(centipede_clip, this.right, this.bottom);
+			
+			followersArray = [];
+			
+			for(j=0; j<3; j++) {
+				
+				follower_clip = new lib.follower();
+				follower = new Follower(follower_clip);
+				//follower.centipede = 
+				follower.objectType = 'follower';
+				follower_clip.name = 'centipede' + i + 'follower' + j;
+				
+				this.numToKill++;
+				this.stage.addChild(follower_clip);
+				this.enemiesArray.push(follower);
+				
+				followersArray.push(follower_clip);
+			}
+			
+			centipede.addFollowers(followersArray);
 			
 			this.numToKill++;
 			this.stage.addChild(centipede_clip);
@@ -355,15 +390,61 @@ export default class AsteroidsGame {
 					this.aliensOut--;
 					this.updateScore(ALIEN_VALUE);
 					this.makeShipDebris(enemy);
+				} else if (enemy.objectType === 'centipede') {
+					enemy.hits++;
+					if (enemy.hits >= enemy.totalHits) {
+						this.removeCentipedeFollowers(enemy);
+						this.makeSplinters(enemy);
+						this.numKilled++;
+						this.updateScore(ASTEROID_LARGE_VALUE);
+						this.checkProgress();
+					} else {
+						break;
+					}
+				} else if (enemy.objectType === 'follower') {
+					this.updateCentipedeFollowers(enemy.clip.name);
+					this.makeSplinters(enemy);
+					this.numKilled++;
+					this.updateScore(ASTEROID_SMALL_VALUE);
+					this.checkProgress();
 				}
 				
-				this.removeEnemyByName(enemy.clip.name); //this.enemiesArray.splice(i,1);
+				this.removeEnemyByName(enemy.clip.name);
 				
 				this.onKillCallback(enemy.getX(), enemy.getY());
 				
 				break;
 			}
 		}
+	}
+	
+	removeCentipedeFollowers(centipede) {
+		console.log('removeCentipedeFollowers ' + centipede.clip.name);
+		console.log('followers: ', centipede.followers);
+		
+		let i, follower_clip, follower;
+		
+		for(i=0; i<centipede.followers.length; i++) {
+			follower_clip = centipede.followers[i];
+			follower = this.getEnemyByName(follower_clip.name);
+			this.makeSplinters(follower);
+			this.numKilled++;
+			this.updateScore(ASTEROID_SMALL_VALUE);
+			this.onKillCallback(follower.getX(), follower.getY());
+			this.removeEnemyByName(follower_clip.name);
+		}
+		this.checkProgress();
+	}
+	
+	updateCentipedeFollowers(followerName) {
+		const centipede_name = followerName.slice(0, followerName.indexOf('follower'));
+		const centipede = this.getEnemyByName(centipede_name);
+		
+		console.log('updateCentipedeFollowers ' + followerName, centipede.followers);
+		
+		centipede.removeFollower(followerName);
+		
+		console.log('followers: ', centipede.followers);
 	}
 	
 	makeDebris(asteroid) {
@@ -528,6 +609,7 @@ export default class AsteroidsGame {
 	startNewLevel() {
 		console.log('starting level ' + this.levelNo);
 		this.makeAsteroids(ASTEROID_COUNT + this.levelNo * this.levelNo);
+		this.makeCentipedes(1);
 	}
 	
 	checkGameTimers() {
