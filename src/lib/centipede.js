@@ -44,7 +44,8 @@ export default class Centipede extends SpaceObject {
 				this.vx = Math.random() * 5 + 5;
 				this.baseRotation = 90;
 			}
-		
+			this.rrange = (this.vy / .18) / (Math.abs(this.vx) / 5) * 90;
+			
 		// up or down moving
 		} else {
 			
@@ -66,6 +67,7 @@ export default class Centipede extends SpaceObject {
 				this.vy = Math.random() * -5 - 5;
 				this.baseRotation = 0;
 			}
+			this.rrange = (Math.abs(this.vy) / 5) / (this.vx / .18) * 180;
 		}
 	}
 	
@@ -107,7 +109,12 @@ export default class Centipede extends SpaceObject {
 		follower.x += follower.vx;
 		follower.y += follower.vy;
 		
-		follower.rotation = this.baseRotation + (follower.index * 10) + Math.sin(this.angle) * (90 + follower.index * 20);
+		var dx = follower.x - tx;
+		var dy = follower.y - ty;
+		var angle = Math.atan2(dy, dx);
+    console.log('angle: ' + angle.toFixed(2));
+		//follower.rotation = this.baseRotation + (follower.index * 10) + Math.sin(this.angle) * (90 + follower.index * 20);
+		follower.rotation = -(angle / Math.PI * 360); //this.baseRotation + Math.sin(this.angle) * this.rrange;
 	}
 	
 	removeFollower(name) {
@@ -122,21 +129,23 @@ export default class Centipede extends SpaceObject {
 		//console.log('Centipede::centipedeRun', Math.sin(this.angle));
 		
 		let i = 0;
+		const sine = Math.sin(this.angle);
 		
-		this.clip.rotation = this.baseRotation + Math.sin(this.angle) * 90;
+		//console.log(this.rrange.toFixed(2) + ' : ' + sine.toFixed(2));
+		
+		this.clip.rotation = this.baseRotation + sine * this.rrange;
 		
 		if (this.dir === 'left' || this.dir === 'right') {
 			
 			this.clip.x += this.vx;
-			this.clip.y = this.baseline + Math.sin(this.angle) * this.amplitude;
+			this.clip.y = this.baseline + sine * this.amplitude;
 			this.angle += this.vy;
 			
 		} else {
 			
 			this.clip.y += this.vy;
-			this.clip.x = this.baseline + Math.sin(this.angle) * this.amplitude;
+			this.clip.x = this.baseline + sine * this.amplitude;
 			this.angle += this.vx;
-			
 		}
 		
 		this.baseline += this.drift;
