@@ -73,11 +73,11 @@ function getMCSymbolPrototype(symbol, nominalBounds, frameBounds) {
 
 	// Layer 1
 	this.shape = new cjs.Shape();
-	this.shape.graphics.f().s("#00FF99").ss(2,1,1).p("AAoAAIhPAA");
+	this.shape.graphics.f().s("#33FF66").ss(5,1,1).p("AAoAAIhPAA");
 
 	this.timeline.addTween(cjs.Tween.get(this.shape).wait(1));
 
-}).prototype = getMCSymbolPrototype(lib.laser, new cjs.Rectangle(-5,-1,10,2), null);
+}).prototype = getMCSymbolPrototype(lib.laser, new cjs.Rectangle(-6.5,-2.5,13,5), null);
 
 
 (lib.follower = function(mode,startPosition,loop) {

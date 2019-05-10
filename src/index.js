@@ -52,8 +52,8 @@ function initThree() {
 	// from unreal bloom example
 	//////////////////////////////
 	var params = {
-		exposure: 1.1,               // 0 - 2
-		bloomStrength: 2.5, //1.5,  // 0 - 3 
+		exposure: 1.0,               // 0 - 2
+		bloomStrength: 2.0, //1.5,  // 0 - 3 
 		bloomThreshold: 0,          // 0 - 1
 		bloomRadius: 0              // 0 - 1
 	};

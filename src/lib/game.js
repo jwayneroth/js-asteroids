@@ -441,6 +441,7 @@ export default class AsteroidsGame {
 			this.updateScore(ASTEROID_SMALL_VALUE);
 			this.onKillCallback(follower.getX(), follower.getY());
 			this.removeEnemyByName(follower_clip.name);
+			this.onKillCallback(follower.getX(), follower.getY());
 		}
 		this.checkProgress();
 	}
