@@ -23,7 +23,7 @@ export default class Centipede extends SpaceObject {
 		this.totalHits = 5;
 		this.hits = 0;
 		this.angle = 0;
-		this.drift = Math.random() * 1 - .5;
+		this.drift = Math.random() * 5.5 - 2.75;
 		
 		// left or right moving
 		if (vector === 1 || vector === 2) {

@@ -3,10 +3,6 @@
 var p; // shortcut to reference prototypes
 lib.ssMetadata = [];
 
-
-// symbols:
-// helper functions:
-
 function mc_symbol_clone() {
 	var clone = this._cloneProps(new this.constructor(this.mode, this.startPosition, this.loop));
 	clone.gotoAndStop(this.currentFrame);
@@ -119,21 +115,25 @@ function getMCSymbolPrototype(symbol, nominalBounds, frameBounds) {
 
 	// Layer_3
 	this.shape = new cjs.Shape();
-	this.shape.graphics.f("#FFFF00").s().p("AgiAjQgPgPAAgUQAAgUAPgPQAOgOAUAAQAVAAAOAOQAPAPAAAUQAAAUgPAPQgOAPgVAAQgUAAgOgPg");
-	this.shape.setTransform(0,-29.3);
+	this.shape.graphics.f().s("#FFFF33").ss(1,1,1).p("AAoAAQAAARgMALQgLAMgRAAQgQAAgMgMQgLgLAAgRQAAgPALgMQAMgMAQAAQARAAALAMQAMAMAAAPg");
+	this.shape.setTransform(0,-30);
 
-	this.timeline.addTween(cjs.Tween.get(this.shape).wait(1));
+	this.shape_1 = new cjs.Shape();
+	this.shape_1.graphics.f("#FFFF33").s().p("AgbAcQgMgLAAgRQAAgPAMgMQAMgMAPAAQARAAALAMQAMAMAAAPQAAARgMALQgLAMgRAAQgPAAgMgMg");
+	this.shape_1.setTransform(0,-30);
+
+	this.timeline.addTween(cjs.Tween.get({}).to({state:[{t:this.shape_1},{t:this.shape}]}).wait(1));
 
 	// Layer_2
-	this.shape_1 = new cjs.Shape();
-	this.shape_1.graphics.f().s("#6600CC").ss(2,1,1).p("AAAldIEsELIhyGwIlzAAIhymwg");
-
 	this.shape_2 = new cjs.Shape();
-	this.shape_2.graphics.f("#000000").s().p("Ai4FeIhzmwIErkLIEsELIhyGwg");
+	this.shape_2.graphics.f().s("#6600CC").ss(2,1,1).p("AAAldIEsELIhyGwIlzAAIhymwg");
 
-	this.timeline.addTween(cjs.Tween.get({}).to({state:[{t:this.shape_2},{t:this.shape_1}]}).wait(1));
+	this.shape_3 = new cjs.Shape();
+	this.shape_3.graphics.f("#000000").s().p("Ai4FeIhzmwIErkLIEsELIhyGwg");
 
-}).prototype = getMCSymbolPrototype(lib.centipede, new cjs.Rectangle(-31.6,-36,63.1,72), null);
+	this.timeline.addTween(cjs.Tween.get({}).to({state:[{t:this.shape_3},{t:this.shape_2}]}).wait(1));
+
+}).prototype = getMCSymbolPrototype(lib.centipede, new cjs.Rectangle(-31,-36,62,72), null);
 
 
 (lib.asteroid = function(mode,startPosition,loop) {
@@ -161,11 +161,11 @@ function getMCSymbolPrototype(symbol, nominalBounds, frameBounds) {
 
 	// Layer 7
 	this.shape = new cjs.Shape();
-	this.shape.graphics.f().s("#00FFCC").ss(1,1,1).p("AAAAjIgdgRIAAgjIAdgRIAeARIAAAjg");
+	this.shape.graphics.f().s("#FFFF33").ss(1,1,1).p("AAAAjIgdgRIAAgjIAdgRIAeARIAAAjg");
 	this.shape.setTransform(3.025,3.5);
 
 	this.shape_1 = new cjs.Shape();
-	this.shape_1.graphics.f("#00FFCC").s().p("AgdASIAAgjIAdgRIAeARIAAAiIgeASg");
+	this.shape_1.graphics.f("#FFFF33").s().p("AgdASIAAgjIAdgRIAeARIAAAiIgeASg");
 	this.shape_1.setTransform(3.025,3.5);
 
 	this.timeline.addTween(cjs.Tween.get({}).to({state:[{t:this.shape_1},{t:this.shape}]}).wait(1));
@@ -340,8 +340,6 @@ an.compositionLoaded = function(id) {
 an.getComposition = function(id) {
 	return an.compositions[id];
 }
-
-
 
 
 

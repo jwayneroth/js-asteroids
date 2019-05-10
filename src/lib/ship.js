@@ -3,7 +3,7 @@ import $ from 'jquery'
 import SpaceObject from './space-object.js'
 import KeyListener from './key.js'
 
-const ROTATION_VEL = 10
+const ROTATION_VEL = 15; //10
 
 export default class Ship extends SpaceObject {
 

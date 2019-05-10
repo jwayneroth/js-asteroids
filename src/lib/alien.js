@@ -31,7 +31,7 @@ class AlienLaser extends SpaceObject {
 			this.clip.y += lvy;
 		}
 	}
-	
+	 
 	kill() {
 		$(window).trigger('alienLaserKilled', [this.clip.name]);
 		super.kill();

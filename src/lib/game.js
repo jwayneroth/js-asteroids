@@ -293,11 +293,13 @@ export default class AsteroidsGame {
 	makeShip() {
 	
 		const ship_clip = new lib.ship();
+		const friction = .999;
+		const thrust = .5; //.3;
 		
 		ship_clip.name = 'ship';
 		ship_clip.gotoAndStop('off');
 		
-		this.ship = new Ship(ship_clip, this.right, this.bottom, this.right/2, this.bottom/2, .3, .999, this.key);
+		this.ship = new Ship(ship_clip, this.right, this.bottom, this.right/2, this.bottom/2, thrust, friction, this.key);
 		
 		this.stage.addChild(ship_clip);
 		
