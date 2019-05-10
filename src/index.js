@@ -28,7 +28,6 @@ function initThree() {
 	stats.showPanel( 0 );
 	document.body.appendChild( stats.dom );
 	scene = new THREE.Scene();
-	//scene.background = new THREE.TextureLoader().load('images/vector-bg.png');
 	scene.background = new THREE.Color( 0x000000 );
 	camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
 	camera.position.x = 0;
@@ -39,21 +38,19 @@ function initThree() {
 		antialias: true,
 	});
 	renderer.setSize(window.innerWidth, window.innerHeight);
-	//renderer.autoClear = false;
 	renderer.setPixelRatio(window.devicePixelRatio || 1);
 	//renderer.shadowMap.enabled = true;
 	renderer.render(scene, camera);
 	document.getElementById("WebGL-output").appendChild(renderer.domElement);
 	createObjects();
 	createSprings();
-	//bindCallbacks();
 	
 	//////////////////////////////
 	// from unreal bloom example
 	//////////////////////////////
 	var params = {
-		exposure: 1.0,               // 0 - 2
-		bloomStrength: 2.0, //1.5,  // 0 - 3 
+		exposure: 1.05,               // 0 - 2
+		bloomStrength: 1.75, //1.5,  // 0 - 3 
 		bloomThreshold: 0,          // 0 - 1
 		bloomRadius: 0              // 0 - 1
 	};
@@ -78,17 +75,18 @@ function initThree() {
 	//////////////////////////////
 	
 	//requestAnimationFrame( animate )
-	createjs.Ticker.framerate = 26;
-	createjs.Ticker.timingMode = 'RAF_SYNCHED';
+	createjs.Ticker.framerate = 30;
+	createjs.Ticker.timingMode = createjs.Ticker.RAF_SYNCHED;
 	createjs.Ticker.addEventListener("tick", animate);
 }
 
 function animate () {
 	stats.begin();
 	
+	plane.material.map.needsUpdate = true;
+	
 	updateVertexSprings();
 	
-	plane.material.map.needsUpdate = true
 	plane.geometry.verticesNeedUpdate = true;
 	plane.geometry.normalsNeedUpdate = true;
 	plane.geometry.computeFaceNormals();
@@ -99,34 +97,39 @@ function animate () {
 	
 	game.gameRun();
 	
+	/*
 	if (Date.now() % 1000 === 0) {
 		console.log('Ticker FPS:' + createjs.Ticker.getMeasuredFPS());
 	}
+	*/
+	
 	stats.end();
 	
 	//requestAnimationFrame( animate );
 }
 
 function createObjects() {
+	
 	const maxWidth = visibleWidthAtZDepth( -100, camera);
 	var height = visibleHeightAtZDepth( -100, camera )
 	var width = height * camera.aspect;
-	planeGeometry = new THREE.PlaneGeometry(width, height, 8, 8); //maxWidth, maxWidth/2, 20, 10);
+	
+	planeGeometry = new THREE.PlaneGeometry(width, height, 8, 8);
+	
 	planeMap = new THREE.Texture(game.stage.canvas);  
-	//planeMap.needsUpdate = true;  
 	planeMap.minFilter = THREE.LinearFilter;
 	planeMap.magFilter = THREE.LinearFilter;
-	//planeMap.generateMipmaps = false;
-	//planeMap.anisotropy = 16;
-	//planeMap.flipY = false;
+	
 	planeMaterial = new THREE.MeshBasicMaterial();
 	planeMaterial.map = planeMap;
+	
 	plane = new THREE.Mesh(planeGeometry, planeMaterial);
 	plane.receiveShadow = false;
 	plane.geometry.dynamic = true;
 	plane.position.x = 0;
 	plane.position.y = 0;
 	plane.position.z = -100;
+	
 	scene.add(plane);  
 }
 
@@ -246,11 +249,11 @@ function updateVertexSprings() {
 
 function checkIntersection(mouseX, mouseY) {
 	//console.log('checkIntersection', mouseX, mouseY);
-	var mouse = new THREE.Vector2(),
-			//mouseX    = evt.offsetX || evt.clientX,
-			//mouseY    = evt.offsetY || evt.clientY,
-			raycaster = new THREE.Raycaster(),
-			intersects = null
+	
+	var mouse = new THREE.Vector2();
+	var raycaster = new THREE.Raycaster();
+	var intersects = null;
+	
 	mouse.x = (mouseX / window.innerWidth) * 2 - 1
 	mouse.y = -(mouseY / window.innerHeight) * 2 + 1
 	raycaster.setFromCamera( mouse, camera );
