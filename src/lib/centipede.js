@@ -14,7 +14,7 @@ export default class Centipede extends SpaceObject {
 	
 	init() {
 		
-		let vxp, vyp, rat;
+		let vamp, vaxis, curve;
 		
 		const vector = Math.round(Math.random() * 3 + 1);
 		
@@ -38,7 +38,7 @@ export default class Centipede extends SpaceObject {
 				this.clip.x = this.right + 50;
 				this.vx = Math.random() * -5 - 5;
 				this.baseRotation = -90;
-				vxp = Math.abs(this.vx)/10;
+				vaxis = Math.abs(this.vx)/10;
 				
 			// right
 			} else  {
@@ -46,15 +46,10 @@ export default class Centipede extends SpaceObject {
 				this.clip.x = -50;
 				this.vx = Math.random() * 5 + 5;
 				this.baseRotation = 90;
-				vxp = -this.vx/10;
+				vaxis = -this.vx/10;
 			}
 			
-			vyp = this.amplitude / (this.bottom/7 + 5);
-			rat = vyp / vxp;
-			
-			//console.log(this.dir);
-			//console.log('vy: ' + this.vy.toFixed(2) + ' vx: ' + this.vx.toFixed(2));
-			//console.log('vyp: ' + vyp.toFixed(2) + ' vxp: ' + vxp.toFixed(2) + ' rat: ' + rat.toFixed(2) + ' rrange: ' + this.rrange.toFixed(2));
+			vamp = this.amplitude / (this.bottom/7 + 5);
 			
 		// up or down moving
 		} else {
@@ -69,7 +64,7 @@ export default class Centipede extends SpaceObject {
 				this.clip.y = -50;
 				this.vy = Math.random() * 5 + 5;
 				this.baseRotation = -180;
-				vyp = this.vy/10;
+				vaxis = this.vy/10;
 				
 			// up
 			} else {
@@ -77,17 +72,20 @@ export default class Centipede extends SpaceObject {
 				this.clip.y = this.bottom + 50;
 				this.vy = Math.random() * -5 - 5;
 				this.baseRotation = 0;
-				vyp = this.vy/10;
+				vaxis = this.vy/10;
 			}
 			
-			vxp = this.amplitude / (this.right/7 + 5);
-			rat = vxp / vyp;
-			
-			//console.log(this.dir);
-			//console.log('vy: ' + this.vy.toFixed(2) + ' vx: ' + this.vx.toFixed(2));
-			//console.log('vyp: ' + vyp.toFixed(2) + ' vxp: ' + vxp.toFixed(2) + ' rat: ' + rat.toFixed(2) + ' rrange: ' + this.rrange.toFixed(2));
+			vamp = this.amplitude / (this.right/7 + 5);
 		}
-		this.rrange = rat * 60;
+		
+		// rrange is range of rotation of centipede head
+		// it is constrained by ratio of curved motion amplitude to speed on perpendicular axis
+		// ie. centipedes with very large arced motion rotate their heads more ;)
+		curve = vamp / vaxis;
+		this.rrange = curve * 60;
+		
+		// we store the ratio for follower friction val
+		this.curve = Math.abs(curve);
 	}
 	
 	addFollowers(arr) {
@@ -95,14 +93,18 @@ export default class Centipede extends SpaceObject {
 		let i = 0;
 		let follower;
 		
+		const spring = .02 + this.curve * .04;
+		
+		console.log('addFollowers curve: ' + this.curve.toFixed(2) + ' spring: ' + spring.toFixed(2));
+		
 		for(i; i < arr.length; i++) {
 			
 			follower = arr[i];
 			follower.index = i;
 			
 			follower.vx = follower.vy = 0;
-			follower.spring = .03;
-			follower.friction = .9;
+			follower.spring = spring;
+			follower.friction = .8;
 			
 			if (i === 0) {
 				follower.x = this.clip.x;
@@ -128,12 +130,13 @@ export default class Centipede extends SpaceObject {
 		follower.x += follower.vx;
 		follower.y += follower.vy;
 		
+		follower.rotation = this.clip.rotation;
+		
+		/* 
 		var dx = follower.x - tx;
 		var dy = follower.y - ty;
 		var angle = Math.atan2(dy, dx);
-    //console.log('angle: ' + angle.toFixed(2));
-		//follower.rotation = this.baseRotation + (follower.index * 10) + Math.sin(this.angle) * (90 + follower.index * 20);
-		follower.rotation = -(angle / Math.PI * 360); //this.baseRotation + Math.sin(this.angle) * this.rrange;
+		*/
 	}
 	
 	removeFollower(name) {
