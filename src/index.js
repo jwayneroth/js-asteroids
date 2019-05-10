@@ -10,6 +10,7 @@ const DISPLACEMENT      = -.2, //-0.16,
 			DAMPEN            = 0.15, //0.998,
 			RESOLUTION        = window.devicePixelRatio || 1;
 
+let lib;
 let canvas, stage, anim_container, dom_overlay_container;
 let game;
 let scene, renderer, camera, planeGeometry, planeMap, planeMaterial, plane;
@@ -269,32 +270,45 @@ function checkIntersection(mouseX, mouseY) {
 
 function initGame() {
 	console.log('init')
+	
+	const comps = AdobeAn.compositions;
+	
+	let comp;
+	
+	for(let key in comps) {
+		if (comps.hasOwnProperty(key)) {
+			comp = comps[key];
+			break;
+		}
+	}
+	
+	lib = comp.getLibrary();
+	
+	console.log('lib', lib);
+	
 	canvas = document.getElementById("canvas");
 	anim_container = document.getElementById("animation_container");
 	dom_overlay_container = document.getElementById("dom_overlay_container");
+	
 	let lastW = -1, lastH = -1;
 	
 	function resizeCanvas() {
-		const w = lib.properties.width,
-					h = lib.properties.height;
-		const iw = window.innerWidth,
-					ih = window.innerHeight;
-		const pRatio = window.devicePixelRatio || 1,
-					xRatio = iw/w,
-					yRatio = ih/h;
+		const w = lib.properties.width;
+		const h = lib.properties.height;
+		const iw = window.innerWidth;
+		const ih = window.innerHeight;
+		const pRatio = window.devicePixelRatio || 1;
+		const xRatio = iw/w;
+		const yRatio = ih/h;
 
 		if (iw === lastW && ih === lastH) return;
 
 		canvas.width = w * pRatio * xRatio;
 		canvas.height = h * pRatio * yRatio;
 
-		canvas.style.width = dom_overlay_container.style.width =
-												 anim_container.style.width = 
-												 w * xRatio + 'px';
+		canvas.style.width = dom_overlay_container.style.width = anim_container.style.width = w * xRatio + 'px';
 
-		canvas.style.height = anim_container.style.height =
-													dom_overlay_container.style.height =
-													h * yRatio + 'px';
+		canvas.style.height = anim_container.style.height = dom_overlay_container.style.height = h * yRatio + 'px';
 
 		lastW = iw;
 		lastH = ih;
@@ -314,8 +328,8 @@ function initGame() {
 	const onDieCallback = function(dx, dy) {
 		checkIntersection(dx, dy);
 	};
-	game = new AsteroidsGame(stage, right, bottom, onKillCallback, onDieCallback);
-
+	game = new AsteroidsGame(lib, stage, right, bottom, onKillCallback, onDieCallback);
+	
 	window.addEventListener('resize', function() {
 		resizeCanvas();
 		game.updateSize(window.innerWidth, window.innerHeight);

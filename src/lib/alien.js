@@ -13,7 +13,7 @@ class AlienLaser extends SpaceObject {
 		
 		this.clip.addEventListener('tick', this.laserRun.bind(this));
 	}
-	
+	 
 	laserRun() {
 		if (this.clip.x < this.left - this.bounds.width / 2) {
 			this.kill();

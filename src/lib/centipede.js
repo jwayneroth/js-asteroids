@@ -6,8 +6,7 @@ export default class Centipede extends SpaceObject {
 		
 		this.init();
 		
-		//this.clip.uncache();
-		//this.clip.cache(0, 0, 200, 200);
+		this.clip.shape.cache(-32, -37, 64, 74);
 		
 		this.clip.addEventListener('tick', this.centipedeRun.bind(this));
 	}
@@ -24,7 +23,7 @@ export default class Centipede extends SpaceObject {
 		this.hits = 0;
 		this.angle = 0;
 		this.drift = Math.random() * 5.5 - 2.75;
-		
+		 
 		// left or right moving
 		if (vector === 1 || vector === 2) {
 			
@@ -95,7 +94,7 @@ export default class Centipede extends SpaceObject {
 		
 		const spring = .02 + this.curve * .04;
 		
-		console.log('addFollowers curve: ' + this.curve.toFixed(2) + ' spring: ' + spring.toFixed(2));
+		//console.log('addFollowers curve: ' + this.curve.toFixed(2) + ' spring: ' + spring.toFixed(2));
 		
 		for(i; i < arr.length; i++) {
 			
@@ -247,6 +246,21 @@ export default class Centipede extends SpaceObject {
 				}
 			}
 		}
+	}
+	
+	takeHit() {
+		this.hits++;
+		if (this.hits >= this.totalHits) {
+			return true;
+		}
+		const mult = this.hits * 20;
+		this.clip.shape.uncache();
+		this.clip.shape.filters = [
+			//new createjs.ColorFilter(0,0,0,1, 0,0,255,0)
+			new createjs.ColorFilter(0,0,0,1,102,0,204 + mult,0)
+		];
+		this.clip.shape.cache(-32, -37, 64, 74);
+		return false;
 	}
 }
 

@@ -11,6 +11,8 @@ import Splinter from './splinter.js'
 import Centipede from './centipede.js'
 import Follower from './follower.js'
 
+let lib;
+
 const ASTEROID_COUNT = 8;
 const NUM_LASERS = 20;
 const NUM_LIVES = 1;
@@ -24,8 +26,10 @@ const ALIEN_VALUE = 25;
  * arg stage: cjs Stage Object
  */
 export default class AsteroidsGame {
-	constructor(stage, right, bottom, onKillCallback, onDieCallback) { 
+	constructor(_lib, stage, right, bottom, onKillCallback, onDieCallback) { 
 		//console.log('AsteroidsGame::constructor');
+		
+		lib = _lib;
 		
 		this.stage = stage;
 		this.stage.name = 'AsteroidsStage';
@@ -393,8 +397,8 @@ export default class AsteroidsGame {
 					this.updateScore(ALIEN_VALUE);
 					this.makeShipDebris(enemy);
 				} else if (enemy.objectType === 'centipede') {
-					enemy.hits++;
-					if (enemy.hits >= enemy.totalHits) {
+					const kill = enemy.takeHit();
+					if (kill === true) {
 						this.removeCentipedeFollowers(enemy);
 						this.makeSplinters(enemy);
 						this.numKilled++;
