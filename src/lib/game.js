@@ -314,7 +314,7 @@ export default class AsteroidsGame {
 		//console.log('AsteroidsGame::makeAlien ' + this.numAliens);
 		
 		const alien_clip = new lib.alien();
-		const alien = new Alien(alien_clip, this.ship, this.right, this.bottom, 0, 0);
+		const alien = new Alien(alien_clip, this.ship, lib.alienLaser, this.right, this.bottom, 0, 0);
 		
 		alien_clip.name = 'alien' + this.numAliens;
 		

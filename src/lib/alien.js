@@ -44,9 +44,10 @@ class AlienLaser extends SpaceObject {
 import SpaceObject from './space-object.js'
 
 export default class Alien extends SpaceObject {
-	constructor(clip, ship, _right, _bottom, _xPos, _yPos) {
+	constructor(clip, ship, alienLaser, _right, _bottom, _xPos, _yPos) {
 		super(clip, _right, _bottom, _xPos, _yPos);
 		
+		this.alienLaserClass = alienLaser;
 		this.alienLaserCount = 0;
 		this.ship = ship;
 		//alienLaserMC = _alienLaserMC;
@@ -124,7 +125,7 @@ export default class Alien extends SpaceObject {
 				break;
 		}
 		
-		const laser_clip = new lib.alienLaser();
+		const laser_clip = new this.alienLaserClass();
 		laser_clip.name = "alienLaser" + this.clip.name.substring(5) + '-' + this.alienLaserCount;
 		const alienLaser = new AlienLaser(laser_clip, this.right, this.bottom, this.clip.x, this.clip.y, setRot);
 		$(window).trigger('alienLaserAdded', [alienLaser]);
