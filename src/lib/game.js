@@ -34,7 +34,7 @@ export default class AsteroidsGame {
 		this.stage = stage;
 		this.stage.name = 'AsteroidsStage';
 		this.canvas = stage.canvas;
-		this.right = right
+		this.right = right;
 		this.bottom = bottom;
 		this.onKillCallback = onKillCallback;
 		this.onDieCallback = onDieCallback;

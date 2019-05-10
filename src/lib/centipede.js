@@ -1,5 +1,17 @@
 import SpaceObject from './space-object.js'
 
+// speed at which curve changes
+const V_MAIN_MAX = .18;
+const V_MAIN_MIN = .06;
+
+// speed along perpendicular axis
+const V_AXIS_MAX = 7;
+const V_AXIS_MIN = 4;
+
+// amplitude of curved motion
+const AMP_MIN = 5;
+const AMP_DIV = 7;
+
 export default class Centipede extends SpaceObject {
 	constructor(clip, _right, _bottom, _delay=6000) {
 		super(clip, _right, _bottom, 0, 0);
@@ -28,19 +40,19 @@ export default class Centipede extends SpaceObject {
 		this.hits = 0;
 		this.angle = 0;
 		this.drift = Math.random() * 5.5 - 2.75;
-		 
+		
 		// left or right moving
 		if (vector === 1 || vector === 2) {
 			
-			this.vy = Math.random() * .12 + .06;
-			this.amplitude = Math.random() * this.bottom/7 + 5;
+			this.vy = Math.random() * (V_MAIN_MAX - V_MAIN_MIN) + V_MAIN_MIN;
+			this.amplitude = Math.random() * this.bottom/AMP_DIV + AMP_MIN;
 			this.baseline = Math.random() * this.bottom;
 			
 			// left
 			if (vector === 1) {
 				this.dir = "left";
 				this.clip.x = this.right + 50;
-				this.vx = Math.random() * -5 - 5;
+				this.vx = Math.random() * -(V_AXIS_MAX - V_AXIS_MIN) - V_AXIS_MIN;
 				this.baseRotation = -90;
 				vaxis = Math.abs(this.vx)/10;
 				
@@ -48,25 +60,25 @@ export default class Centipede extends SpaceObject {
 			} else  {
 				this.dir = "right";
 				this.clip.x = -50;
-				this.vx = Math.random() * 5 + 5;
+				this.vx = Math.random() * (V_AXIS_MAX - V_AXIS_MIN) + V_AXIS_MIN;
 				this.baseRotation = 90;
 				vaxis = -this.vx/10;
 			}
 			
-			vamp = this.amplitude / (this.bottom/7 + 5);
+			vamp = this.amplitude / (this.bottom/AMP_DIV + AMP_MIN);
 			
 		// up or down moving
 		} else {
 			
-			this.vx = Math.random() * .12 + .06;
-			this.amplitude = Math.random() * this.right/7 + 5;
+			this.vx = Math.random() * (V_MAIN_MAX - V_MAIN_MIN) + V_MAIN_MIN;
+			this.amplitude = Math.random() * this.right/AMP_DIV + AMP_MIN;
 			this.baseline = Math.random() * this.right;
 			
 			// down
 			if (vector === 3) {
 				this.dir = "down";
 				this.clip.y = -50;
-				this.vy = Math.random() * 5 + 5;
+				this.vy = Math.random() * (V_AXIS_MAX - V_AXIS_MIN) + V_AXIS_MIN;
 				this.baseRotation = -180;
 				vaxis = this.vy/10;
 				
@@ -74,12 +86,12 @@ export default class Centipede extends SpaceObject {
 			} else {
 				this.dir = "up";
 				this.clip.y = this.bottom + 50;
-				this.vy = Math.random() * -5 - 5;
+				this.vy = Math.random() * -(V_AXIS_MAX - V_AXIS_MIN) - V_AXIS_MIN;
 				this.baseRotation = 0;
 				vaxis = this.vy/10;
 			}
 			
-			vamp = this.amplitude / (this.right/7 + 5);
+			vamp = this.amplitude / (this.right/AMP_DIV + AMP_MIN);
 		}
 		
 		// rrange is range of rotation of centipede head
@@ -184,56 +196,57 @@ export default class Centipede extends SpaceObject {
 			}
 		}
 		
-		//this.clip.updateCache();
-		
 		this.checkWalls();
 	}
 	
 	checkWalls() {
 		
-		const clip = this.clip
+		const {clip, right, bottom, bounds, dir, angle, amplitude} = this;
+		const {width, height} = bounds;
+		const cx = clip.x;
+		const cy = clip.y;
 		
 		let hit = 0;
 		
-		if (this.dir === 'left' || this.dir === 'right') {
+		if (dir === 'left' || dir === 'right') {
 			
-			if (clip.x > this.right + this.bounds.width / 2) {
-				clip.x = 0 - this.bounds.width / 2;
+			if (cx > right + width / 2) {
+				clip.x = 0 - width / 2;
 				hit = 1;
 			}
-			if (clip.x < 0 - this.bounds.width / 2) {
-				clip.x = this.right + this.bounds.width / 2
+			if (cx < 0 - width / 2) {
+				clip.x = right + width / 2
 				hit = 1;
 			}
-			if (clip.y > this.bottom + this.bounds.height / 2) {
-				this.baseline =  -(this.clip.y - this.baseline);
-				this.clip.y = this.baseline + Math.sin(this.angle) * this.amplitude;
+			if (cy > bottom + height / 2) {
+				this.baseline = -(cy - this.baseline);
+				clip.y = this.baseline + Math.sin(angle) * amplitude;
 				hit = 1;
 			}
-			if (clip.y < 0 - this.bounds.height / 2) {
-				this.baseline = this.bottom - (this.clip.y - this.baseline);
-				this.clip.y = this.baseline + Math.sin(this.angle) * this.amplitude;
+			if (cy < 0 - height / 2) {
+				this.baseline = bottom - (cy - this.baseline);
+				clip.y = this.baseline + Math.sin(angle) * amplitude;
 				hit = 1;
 			}
 		
 		} else  {
 		
-			if (clip.x > this.right + this.bounds.width / 2) {
-				this.baseline =  -(this.clip.x - this.baseline);
-				clip.x = this.baseline + Math.sin(this.angle) * this.amplitude;
+			if (cx > right + width / 2) {
+				this.baseline =  -(cx - this.baseline);
+				clip.x = this.baseline + Math.sin(angle) * amplitude;
 				hit = 1;
 			}
-			if (clip.x < 0 - this.bounds.width / 2) {
-				this.baseline = this.right - (this.clip.x - this.baseline);
-				clip.x = this.baseline + Math.sin(this.angle) * this.amplitude;
+			if (cx < 0 - width / 2) {
+				this.baseline = right - (cx - this.baseline);
+				clip.x = this.baseline + Math.sin(angle) * amplitude;
 				hit = 1;
 			}
-			if (clip.y > this.bottom + this.bounds.height / 2) {
-				clip.y = 0 - this.bounds.height/2;
+			if (cy > bottom + height / 2) {
+				clip.y = 0 - height/2;
 				hit = 1;
 			}
-			if (clip.y < 0 - this.bounds.height / 2) {
-				clip.y = this.bottom + this.bounds.height/2;
+			if (cy < 0 - height / 2) {
+				clip.y = bottom + height/2;
 				hit = 1;
 			}
 		}
@@ -243,8 +256,8 @@ export default class Centipede extends SpaceObject {
 			for (i=0; i<this.followers.length; i++) {
 				follower = this.followers[i];
 				if (i === 0) {
-					follower.x = this.clip.x;
-					follower.y = this.clip.y;
+					follower.x = clip.x;
+					follower.y = clip.y;
 				} else  {
 					follower.x = this.followers[i-1].x;
 					follower.y = this.followers[i-1].y;
