@@ -9,22 +9,22 @@ export default class Ship extends SpaceObject {
 
 	constructor(clip, _right, _bottom, xPos, yPos, thrustIn, frictionIn, keyListener = new KeyListener()) {
 		super(clip, _right, _bottom, xPos, yPos)
-		//console.log('Ship::constructor')
 		
-		clip.ship_inner.cache(-10,-10,100,100,1);
+		this.clip.ship_inner.cache(-10,-10,128,128,1);
+		
 		for(var i=0; i<5; i++) {
-			clip['tp' + (i+1)].cache(-20,-20,60,60);
+			clip['tp' + (i+1)].cache(-32,-32,64,64);
 		}
 		
 		this.tickDelegate = null
-		this.keyDelegate = null
+		this.keyDelegate = null;
 		
-		this.makeAliveID = null
-		this.thrust = thrustIn
-		this.friction = frictionIn
+		this.makeAliveID = null;
+		this.thrust = thrustIn;
+		this.friction = frictionIn;
 		
-		this.setVels(0,0) //,12)
-		this.vr = ROTATION_VEL    
+		this.setVels(0,0);
+		this.vr = ROTATION_VEL;
 		
 		this.key = keyListener;  
 	}
@@ -72,10 +72,10 @@ export default class Ship extends SpaceObject {
 		
 		// left
 		if (this.key.isDown(37)) {
-			this.clip.rotation -= this.vr
+			this.clip.rotation -= this.vr;
 		// right
 		} else if (this.key.isDown(39)) {
-			this.clip.rotation += this.vr
+			this.clip.rotation += this.vr;
 		}
 		// up
 		if (this.key.isDown(38)) {

@@ -13,7 +13,7 @@ import Follower from './follower.js'
 
 let lib;
 
-const ASTEROID_COUNT = 8;
+const ASTEROID_COUNT = 6;
 const NUM_LASERS = 20;
 const NUM_LIVES = 1;
 const FIRE_DELAY = 175;
@@ -172,7 +172,7 @@ export default class AsteroidsGame {
 		
 		this.scoreText.x = this.right - 100;
 		
-		//this.stage.updateViewport(w, h);
+		this.stage.updateViewport(w, h);
 	}
 	
 	onShipLifeChange(evt, alive) {
@@ -262,12 +262,15 @@ export default class AsteroidsGame {
 		let i, j;
 		let centipede_clip, centipede;
 		let follower_clip, follower, followersArray;
+		let delay;
 		
 		for(i = 0; i<count; i++) {
 			
+			delay = 3000 + Math.round(Math.random() * 6) * 1000;
+			
 			centipede_clip = new lib.centipede();
 			centipede_clip.name = 'centipede' + i;
-			centipede = new Centipede(centipede_clip, this.right, this.bottom);
+			centipede = new Centipede(centipede_clip, this.right, this.bottom, delay);
 			
 			followersArray = [];
 			
@@ -615,7 +618,7 @@ export default class AsteroidsGame {
 	startNewLevel() {
 		console.log('starting level ' + this.levelNo);
 		this.makeAsteroids(ASTEROID_COUNT + this.levelNo * this.levelNo);
-		this.makeCentipedes(1);
+		this.makeCentipedes(this.levelNo);
 	}
 	
 	checkGameTimers() {

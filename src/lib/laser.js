@@ -5,11 +5,9 @@ export default class Laser extends SpaceObject {
 	constructor(clip, _right, _bottom, shipX, shipY, rotIn) {
 		super(clip, _right, _bottom, shipX, shipY);
 		
-		this.rot = rotIn
-		//this.clip.scaleX = 1.20
-		//this.clip.scaleY = 3.5
+		this.rot = rotIn;
 		
-		//laserRun();
+		this.clip.cache(-8,-8,16,16);
 	}
 	
 	laserRun() {

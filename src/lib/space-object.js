@@ -1,27 +1,5 @@
 export default class SpaceObject {
-	/*private var vx:Number;
-	private var vy:Number;
-	private var vr:Number;
-	public var right:Number;
-	public var bottom:Number;
-	public var left:Number;
-	public var top:Number;
-	public var object:MovieClip;
-	private var target:MovieClip;
-	public var objectType:String = "object";*/
-
 	constructor(clip, _right, _bottom, xPos, yPos) {
-		//console.log('SpaceObject::constructor\n\tright: ' + _right + ' bottom: ' + _bottom + ' x: ' + xPos + ' y: ' + yPos)
-		
-		/*target = _targetClip;
-		object = target.attachMovie(clip, clipName, target.getNextHighestDepth());
-		object._x = xPos;
-		object._y = yPos;
-		right = _right;
-		bottom = _bottom;
-		top = 0;
-		left = 0;
-		setVels();*/
 		
 		clip.x = xPos
 		clip.y = yPos
@@ -39,9 +17,7 @@ export default class SpaceObject {
 	}
 	
 	setBounds() {
-		//console.log('SpaceObject::setBounds')
 		this.bounds = this.clip.nominalBounds
-		//this.clip.setBounds(this.bounds)
 	}
 	
 	setVels(_vx, _vy, _vr) {

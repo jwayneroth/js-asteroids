@@ -11,9 +11,11 @@ class AlienLaser extends SpaceObject {
 		this.clip.rotation = this.rot;
 		this.objectType = "alienLaser";
 		
+		this.clip.cache(-8, -8, 16, 16);
+		
 		this.clip.addEventListener('tick', this.laserRun.bind(this));
 	}
-	 
+	  
 	laserRun() {
 		if (this.clip.x < this.left - this.bounds.width / 2) {
 			this.kill();
@@ -52,6 +54,9 @@ export default class Alien extends SpaceObject {
 		this.ship = ship;
 		//alienLaserMC = _alienLaserMC;
 		this.initAlien();
+		
+		this.clip.cache(-32, -32, 64, 64);
+		
 		this.clip.addEventListener('tick', this.alienRun.bind(this));
 	}
 	

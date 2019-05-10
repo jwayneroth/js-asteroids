@@ -1,14 +1,19 @@
 import SpaceObject from './space-object.js'
 
 export default class Centipede extends SpaceObject {
-	constructor(clip, _right, _bottom) {
+	constructor(clip, _right, _bottom, _delay=6000) {
 		super(clip, _right, _bottom, 0, 0);
 		
 		this.init();
 		
-		this.clip.cache(-32, -37, 64, 74);
-		this.clip.eye.cache(-6,-6,12,12);
-		this.clip.addEventListener('tick', this.centipedeRun.bind(this));
+		this.clip.eye.cache(-8,-8,16,16);
+		this.clip.cache(-64, -64, 128, 128);
+		
+		var home = this;
+		
+		this.beginRunID = setTimeout(function() {
+			home.clip.addEventListener('tick', home.centipedeRun.bind(home));
+		}, _delay);
 	}
 	
 	init() {
@@ -260,11 +265,14 @@ export default class Centipede extends SpaceObject {
 		
 		this.clip.uncache();
 		this.clip.eye.uncache();
+		
 		this.clip.eye.filters = [
 			new createjs.ColorFilter(0,0,0,1,255,255-mult,50,0)
 		];
-		this.clip.eye.cache(-6,-6,12,12);
-		this.clip.cache(-32, -37, 64, 74);
+		
+		this.clip.eye.cache(-8,-8,16,16);
+		this.clip.cache(-64, -64, 128, 128);
+		
 		return false;
 	}
 }

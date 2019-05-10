@@ -10,6 +10,9 @@ export default class Asteroid extends SpaceObject {
 		this.top = 0;
 		this.left = 0;
 		this.initAsteroid();
+		
+		this.clip.cache(-64, -64, 128, 128);
+		
 		this.clip.addEventListener('tick', this.asteroidRun.bind(this));
 	}
 	
