@@ -14,6 +14,8 @@ export default class Centipede extends SpaceObject {
 	
 	init() {
 		
+		let vxp, vyp, rat;
+		
 		const vector = Math.round(Math.random() * 3 + 1);
 		
 		this.objectType = "centipede";
@@ -36,6 +38,7 @@ export default class Centipede extends SpaceObject {
 				this.clip.x = this.right + 50;
 				this.vx = Math.random() * -5 - 5;
 				this.baseRotation = -90;
+				vxp = Math.abs(this.vx)/10;
 				
 			// right
 			} else  {
@@ -43,8 +46,15 @@ export default class Centipede extends SpaceObject {
 				this.clip.x = -50;
 				this.vx = Math.random() * 5 + 5;
 				this.baseRotation = 90;
+				vxp = -this.vx/10;
 			}
-			this.rrange = (this.vy / .18) / (Math.abs(this.vx) / 5) * 90;
+			
+			vyp = this.amplitude / (this.bottom/7 + 5);
+			rat = vyp / vxp;
+			
+			//console.log(this.dir);
+			//console.log('vy: ' + this.vy.toFixed(2) + ' vx: ' + this.vx.toFixed(2));
+			//console.log('vyp: ' + vyp.toFixed(2) + ' vxp: ' + vxp.toFixed(2) + ' rat: ' + rat.toFixed(2) + ' rrange: ' + this.rrange.toFixed(2));
 			
 		// up or down moving
 		} else {
@@ -59,6 +69,7 @@ export default class Centipede extends SpaceObject {
 				this.clip.y = -50;
 				this.vy = Math.random() * 5 + 5;
 				this.baseRotation = -180;
+				vyp = this.vy/10;
 				
 			// up
 			} else {
@@ -66,9 +77,17 @@ export default class Centipede extends SpaceObject {
 				this.clip.y = this.bottom + 50;
 				this.vy = Math.random() * -5 - 5;
 				this.baseRotation = 0;
+				vyp = this.vy/10;
 			}
-			this.rrange = (Math.abs(this.vy) / 5) / (this.vx / .18) * 180;
+			
+			vxp = this.amplitude / (this.right/7 + 5);
+			rat = vxp / vyp;
+			
+			//console.log(this.dir);
+			//console.log('vy: ' + this.vy.toFixed(2) + ' vx: ' + this.vx.toFixed(2));
+			//console.log('vyp: ' + vyp.toFixed(2) + ' vxp: ' + vxp.toFixed(2) + ' rat: ' + rat.toFixed(2) + ' rrange: ' + this.rrange.toFixed(2));
 		}
+		this.rrange = rat * 60;
 	}
 	
 	addFollowers(arr) {
@@ -112,7 +131,7 @@ export default class Centipede extends SpaceObject {
 		var dx = follower.x - tx;
 		var dy = follower.y - ty;
 		var angle = Math.atan2(dy, dx);
-    console.log('angle: ' + angle.toFixed(2));
+    //console.log('angle: ' + angle.toFixed(2));
 		//follower.rotation = this.baseRotation + (follower.index * 10) + Math.sin(this.angle) * (90 + follower.index * 20);
 		follower.rotation = -(angle / Math.PI * 360); //this.baseRotation + Math.sin(this.angle) * this.rrange;
 	}
